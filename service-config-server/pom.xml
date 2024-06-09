@@ -11,7 +11,7 @@
 	<groupId>mingeso.proyecto</groupId>
 	<artifactId>autofix-config-server</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>Autofix Config Server</name>
+	<name>autofix-config-server</name>
 	<description>AutoFix Config Server Service</description>
 	<properties>
 		<java.version>17</java.version>

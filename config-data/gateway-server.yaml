@@ -21,11 +21,21 @@ spring:
             allowedMethods: "*"
             allowedHeaders: "*"
       routes:
-        # - id: ms-orders
-        #   uri: lb://ms-orders
-        #   predicates:
-        #     - Path=/orders/**
-        # - id: ms-products
-        #   uri: lb://ms-products
-        #   predicates:
-        #     - Path=/products/**
+        - id: autofix-autos
+          uri: lb://autofix-autos
+          predicates:
+            - Path=/autos/**
+            - Path=/marcas/**
+            - Path=/bonos/**
+        - id: autofix-reparaciones
+          uri: lb://autofix-reparaciones
+          predicates:
+            - Path=/reparaciones/**
+        - id: autofix-ordenes
+          uri: lb://autofix-ordenes
+          predicates:
+            - Path=/ordenes/**
+        - id: autofix-reportes
+          uri: lb://autofix-reportes
+          predicates:
+            - Path=/reportes/**
