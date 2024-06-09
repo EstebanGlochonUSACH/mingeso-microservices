@@ -1,81 +1,86 @@
 package mingeso.proyecto.autofix_reparaciones.entities;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
+import jakarta.persistence.*;
 
 @Entity
 public class Reparacion
 {
-	public enum Tipo {
-		FRENOS,
-		REFRIGERACION,
-		MOTOR,
-		TRANSMISION,
-		SIS_ELECTRICO,
-		SIS_ESCAPE,
-		NEUMATICOS,
-		SUSPENSION_DIRECCION,
-		AIRE_ACONDICIONADO,
-		COMBUSTIBLE,
-		PARABRISAS
-	};
-
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)
-	private Long id_reparacion;
+	private Long id;
 
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "id_orden")
-	@JsonBackReference
-	public mingeso.proyecto.autofix_reparaciones.entities.Orden orden;
+	private String nombre;
 
-	private Tipo tipo;
+	@Column(name = "monto_gasolina")
+	private Integer montoGasolina;
 
-	private Integer monto;
+	@Column(name = "monto_diesel")
+	private Integer montoDiesel;
 
-	public Reparacion() {}
+	@Column(name = "monto_hibrido")
+	private Integer montoHibrido;
 
-	public Reparacion(mingeso.proyecto.autofix_reparaciones.entities.Orden orden, Tipo tipo, Integer monto){
-		this.orden = orden;
-		this.tipo = tipo;
-		this.monto = monto;
-	}
+	@Column(name = "monto_electrico")
+	private Integer montoElectrico;
+
+	@Column(nullable = true)
+	private String descripcion;
+
+	public Reparacion() {};
 
 	public Long getId(){
-		return id_reparacion;
+		return id;
 	}
 
-	public void setId(Long id_reparacion){
-		this.id_reparacion = id_reparacion;
+	public void setId(){
+		this.id = id;
 	}
 
-	public mingeso.proyecto.autofix_reparaciones.entities.Orden getOrden() {
-		return orden;
+	public String getNombre(){
+		return nombre;
 	}
 
-	public void setOrden(mingeso.proyecto.autofix_reparaciones.entities.Orden orden) {
-		this.orden = orden;
+	public void setNombre(String nombre){
+		this.nombre = nombre;
 	}
 
-	public Tipo getTipo(){
-		return tipo;
+	public Integer getMontoGasolina(){
+		return montoGasolina;
 	}
 
-	public void setTipo(Tipo tipo){
-		this.tipo = tipo;
+	public void setMontoGasolina(Integer monto){
+		this.montoGasolina = monto;
 	}
 
-	public Integer getMonto(){
-		return monto;
+	public Integer getMontoDiesel(){
+		return montoDiesel;
 	}
 
-	public void setMonto(Integer monto){
-		this.monto = monto;
+	public void setMontoDiesel(Integer monto){
+		this.montoDiesel = monto;
+	}
+
+	public Integer getMontoHibrido(){
+		return montoHibrido;
+	}
+
+	public void setMontoHibrido(Integer monto){
+		this.montoHibrido = monto;
+	}
+
+	public Integer getMontoElectrico(){
+		return montoElectrico;
+	}
+
+	public void setMontoElectrico(Integer monto){
+		this.montoElectrico = monto;
+	}
+
+	public String getDescripcion(){
+		return descripcion;
+	}
+
+	public void setDescripcion(String descripcion){
+		this.descripcion = descripcion;
 	}
 }

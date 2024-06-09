@@ -1,7 +1,5 @@
 package mingeso.proyecto.autofix_ordenes.config;
 
-import mingeso.proyecto.autofix_ordenes.entities.Auto;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -9,7 +7,7 @@ import java.util.Map;
 
 public class RecargoKilometrajeConfig {
 
-	private static final Map<Auto.Tipo, List<Double>> RECARGOS = new HashMap<>();
+	private static final Map<String, List<Double>> RECARGOS = new HashMap<>();
 
 	static {
 		// Para auto tipo SEDAN:
@@ -19,7 +17,7 @@ public class RecargoKilometrajeConfig {
 		listSedan.add(0.07);
 		listSedan.add(0.12);
 		listSedan.add(0.20);
-		RECARGOS.put(Auto.Tipo.SEDAN, listSedan);
+		RECARGOS.put("SEDAN", listSedan);
 
 		// Para auto tipo HATCHBACK:
 		List<Double> listHatchback = new ArrayList<>();
@@ -28,7 +26,7 @@ public class RecargoKilometrajeConfig {
 		listHatchback.add(0.07);
 		listHatchback.add(0.12);
 		listHatchback.add(0.20);
-		RECARGOS.put(Auto.Tipo.HATCHBACK, listHatchback);
+		RECARGOS.put("HATCHBACK", listHatchback);
 
 		// Para auto tipo SUV:
 		List<Double> listSuv = new ArrayList<>();
@@ -37,7 +35,7 @@ public class RecargoKilometrajeConfig {
 		listSuv.add(0.09);
 		listSuv.add(0.12);
 		listSuv.add(0.20);
-		RECARGOS.put(Auto.Tipo.SUV, listSuv);
+		RECARGOS.put("SUV", listSuv);
 
 		// Para auto tipo PICKUP:
 		List<Double> listPickup = new ArrayList<>();
@@ -46,7 +44,7 @@ public class RecargoKilometrajeConfig {
 		listPickup.add(0.09);
 		listPickup.add(0.12);
 		listPickup.add(0.20);
-		RECARGOS.put(Auto.Tipo.PICKUP, listPickup);
+		RECARGOS.put("PICKUP", listPickup);
 
 		// Para auto tipo FURGONETA:
 		List<Double> listFurgoneta = new ArrayList<>();
@@ -55,10 +53,10 @@ public class RecargoKilometrajeConfig {
 		listFurgoneta.add(0.09);
 		listFurgoneta.add(0.12);
 		listFurgoneta.add(0.20);
-		RECARGOS.put(Auto.Tipo.FURGONETA, listFurgoneta);
+		RECARGOS.put("FURGONETA", listFurgoneta);
 	}
 
-	public static Double getRecargo(Auto.Tipo tipoAuto, Integer kilometraje) throws Exception {
+	public static Double getRecargo(String tipoAuto, Integer kilometraje) throws Exception {
 		List<Double> recargos = RECARGOS.get(tipoAuto);
 		if (recargos != null) {
 			if(kilometraje < 5_000){
@@ -75,6 +73,6 @@ public class RecargoKilometrajeConfig {
 			}
 			return recargos.get(4);
 		}
-		throw new Exception(String.format("No se pudo obtener la recarga (tipoAuto=%s, kilometraje=%s)", tipoAuto.name(), kilometraje.toString()));
+		throw new Exception(String.format("No se pudo obtener la recarga (tipoAuto=%s, kilometraje=%s)", tipoAuto, kilometraje.toString()));
 	}
 }

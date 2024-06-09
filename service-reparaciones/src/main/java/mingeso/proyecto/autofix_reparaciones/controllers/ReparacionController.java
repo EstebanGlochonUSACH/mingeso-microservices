@@ -1,11 +1,12 @@
 package mingeso.proyecto.autofix_reparaciones.controllers;
 
+import java.util.ArrayList;
 import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import mingeso.proyecto.autofix_reparaciones.entities.Orden;
 import mingeso.proyecto.autofix_reparaciones.entities.Reparacion;
 import mingeso.proyecto.autofix_reparaciones.services.ReparacionService;
 
@@ -26,34 +27,20 @@ public class ReparacionController
 		return ResponseEntity.ok(reparaciones);
 	}
 
-	@GetMapping("/tipos")
-	public ResponseEntity<List<Reparacion.Tipo>> getAllTipoReparaciones(
-		@RequestParam(required = true) Long ordenId
-	) {
-		try{
-			List<Reparacion.Tipo> reparaciones = reparacionService.getAllTipoReparaciones(ordenId);
-			return ResponseEntity.ok(reparaciones);
-		}
-		catch(Exception err){
-			return ResponseEntity.badRequest().build();
-		}
-	}
-
 	@GetMapping("/{id}")
-	public ResponseEntity<Reparacion> getReparacionById(@PathVariable Long id) {
+	public ResponseEntity<Reparacion> getReparacion(@PathVariable Long id) {
 		Reparacion reparacion = reparacionService.getReparacionById(id);
-		if (reparacion != null) {
-			return ResponseEntity.ok(reparacion);
-		} else {
+		if(reparacion == null){
 			return ResponseEntity.notFound().build();
 		}
+		return ResponseEntity.ok(reparacion);
 	}
 
 	@PostMapping("/create")
-	public ResponseEntity<Orden> createReparacion(@RequestBody Reparacion reparacion) {
+	public ResponseEntity<Reparacion> createReparacion(@RequestBody Reparacion reparacion) {
 		try{
-			Orden orden = reparacionService.createReparacion(reparacion);
-			return ResponseEntity.status(HttpStatus.CREATED).body(orden);
+			reparacion = reparacionService.createReparacion(reparacion);
+			return ResponseEntity.status(HttpStatus.CREATED).body(reparacion);
 		}
 		catch(Exception err){
 			err.printStackTrace();
@@ -72,8 +59,11 @@ public class ReparacionController
 	}
 
 	@DeleteMapping("/{id}")
-	public ResponseEntity<Orden> deleteReparacion(@PathVariable Long id) throws Exception {
-		Orden orden = reparacionService.deleteReparacion(id);
-		return ResponseEntity.ok(orden);
+	public ResponseEntity<String> deleteReparacion(@PathVariable Long id) {
+		Reparacion rep = reparacionService.deleteReparacion(id);
+		if(rep == null){
+			return ResponseEntity.notFound().build();
+		}
+		return ResponseEntity.ok("OK");
 	}
 }

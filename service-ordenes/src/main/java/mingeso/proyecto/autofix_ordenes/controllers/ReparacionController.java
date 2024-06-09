@@ -26,19 +26,6 @@ public class ReparacionController
 		return ResponseEntity.ok(reparaciones);
 	}
 
-	@GetMapping("/tipos")
-	public ResponseEntity<List<Reparacion.Tipo>> getAllTipoReparaciones(
-		@RequestParam(required = true) Long ordenId
-	) {
-		try{
-			List<Reparacion.Tipo> reparaciones = reparacionService.getAllTipoReparaciones(ordenId);
-			return ResponseEntity.ok(reparaciones);
-		}
-		catch(Exception err){
-			return ResponseEntity.badRequest().build();
-		}
-	}
-
 	@GetMapping("/{id}")
 	public ResponseEntity<Reparacion> getReparacionById(@PathVariable Long id) {
 		Reparacion reparacion = reparacionService.getReparacionById(id);

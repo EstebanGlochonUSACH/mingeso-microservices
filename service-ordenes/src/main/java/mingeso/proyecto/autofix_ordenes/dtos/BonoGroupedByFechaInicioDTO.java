@@ -1,25 +1,24 @@
 package mingeso.proyecto.autofix_ordenes.dtos;
 
 import java.time.LocalDateTime;
-import mingeso.proyecto.autofix_ordenes.entities.Marca;
 
 public class BonoGroupedByFechaInicioDTO {
-	private Marca marca;
+	private Long id_marca;
 	private Integer monto;
 	private LocalDateTime fechaInicio;
 	private LocalDateTime fechaTermino;
 	private Long count;
 
-	public BonoGroupedByFechaInicioDTO(Marca marca, Integer monto, LocalDateTime fechaInicio, LocalDateTime fechaTermino, Long count) {
-		this.marca = marca;
+	public BonoGroupedByFechaInicioDTO(Long marca, Integer monto, LocalDateTime fechaInicio, LocalDateTime fechaTermino, Long count) {
+		this.id_marca = marca;
 		this.monto = monto;
 		this.fechaInicio = fechaInicio;
 		this.fechaTermino = fechaTermino;
 		this.count = count;
 	}
 
-	public Marca getMarca() {
-		return marca;
+	public Long getMarca() {
+		return id_marca;
 	}
 
 	public Integer getMonto() {

@@ -12,20 +12,6 @@ import jakarta.persistence.ManyToOne;
 @Entity
 public class Reparacion
 {
-	public enum Tipo {
-		FRENOS,
-		REFRIGERACION,
-		MOTOR,
-		TRANSMISION,
-		SIS_ELECTRICO,
-		SIS_ESCAPE,
-		NEUMATICOS,
-		SUSPENSION_DIRECCION,
-		AIRE_ACONDICIONADO,
-		COMBUSTIBLE,
-		PARABRISAS
-	};
-
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)
 	private Long id_reparacion;
@@ -35,15 +21,15 @@ public class Reparacion
 	@JsonBackReference
 	public Orden orden;
 
-	private Tipo tipo;
+	private Long id_tipo;
 
 	private Integer monto;
 
 	public Reparacion() {}
 
-	public Reparacion(Orden orden, Tipo tipo, Integer monto){
+	public Reparacion(Orden orden, Long tipo, Integer monto){
 		this.orden = orden;
-		this.tipo = tipo;
+		this.id_tipo = tipo;
 		this.monto = monto;
 	}
 
@@ -63,12 +49,12 @@ public class Reparacion
 		this.orden = orden;
 	}
 
-	public Tipo getTipo(){
-		return tipo;
+	public Long getTipo(){
+		return id_tipo;
 	}
 
-	public void setTipo(Tipo tipo){
-		this.tipo = tipo;
+	public void setTipo(Long tipo){
+		this.id_tipo = tipo;
 	}
 
 	public Integer getMonto(){

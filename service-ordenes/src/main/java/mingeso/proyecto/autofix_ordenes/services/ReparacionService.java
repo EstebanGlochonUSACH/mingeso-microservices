@@ -1,11 +1,12 @@
 package mingeso.proyecto.autofix_ordenes.services;
 
-import java.util.ArrayList;
 import java.util.List;
+import mingeso.proyecto.autofix_ordenes.clients.AutosFeignClient;
+import mingeso.proyecto.autofix_ordenes.clients.ReparacionesFeignClient;
+import mingeso.proyecto.autofix_ordenes.dtos.AutoDTO;
+import mingeso.proyecto.autofix_ordenes.dtos.ReparacionTipoDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import mingeso.proyecto.autofix_ordenes.config.MontoReparacionConfig;
-import mingeso.proyecto.autofix_ordenes.entities.Auto;
 import mingeso.proyecto.autofix_ordenes.entities.Orden;
 import mingeso.proyecto.autofix_ordenes.entities.Reparacion;
 import mingeso.proyecto.autofix_ordenes.repositories.ReparacionRepository;
@@ -15,35 +16,24 @@ public class ReparacionService
 {
 	private final ReparacionRepository reparacionRepository;
 	private final OrdenService ordenService;
+	private final AutosFeignClient autosClient;
+	private final ReparacionesFeignClient reparacionesClient;
 
 	@Autowired
-	public ReparacionService(ReparacionRepository reparacionRepository, OrdenService ordenService) {
+	public ReparacionService(
+		ReparacionRepository reparacionRepository,
+		OrdenService ordenService,
+		AutosFeignClient autosClient,
+		ReparacionesFeignClient reparacionesClient
+	) {
 		this.reparacionRepository = reparacionRepository;
 		this.ordenService = ordenService;
+		this.autosClient = autosClient;
+		this.reparacionesClient = reparacionesClient;
 	}
 
 	public List<Reparacion> getAllReparaciones() {
 		return reparacionRepository.findAll();
-	}
-
-	public List<Reparacion.Tipo> getAllTipoReparaciones(Long ordenId) throws Exception {
-		Orden orden = ordenService.getOrdenById(ordenId);
-		if(orden == null){
-			return null;
-		}
-
-		Auto.Motor tipoMotor = orden.getAuto().getMotor();
-		List<Reparacion.Tipo> tipos = new ArrayList<>();
-		Integer monto;
-		
-		for(Reparacion.Tipo tipoReparacion : Reparacion.Tipo.values()){
-			monto = MontoReparacionConfig.getMonto(tipoMotor, tipoReparacion);
-			if(monto > 0){
-				tipos.add(tipoReparacion);
-			}
-		}
-		
-		return tipos;
 	}
 
 	public Reparacion getReparacionById(Long id) {
@@ -70,8 +60,38 @@ public class ReparacionService
 			throw new Exception("La reparacion no tiene \"orden\".");
 		}
 
-		Auto auto = orden.getAuto();
-		Integer monto = MontoReparacionConfig.getMonto(auto.getMotor(), reparacion.getTipo());
+		Long id_auto = orden.getAuto();
+		if(id_auto == null) {
+			throw new Exception("La orden no tiene auto!");
+		}
+		AutoDTO auto = autosClient.getAutoById(id_auto);
+		if(auto == null) {
+			throw new Exception("El auto de la orden no existe!");
+		}
+
+		ReparacionTipoDTO repTipo = reparacionesClient.getReparacion(reparacion.getTipo());
+		if(repTipo == null){
+			throw new Exception("El tipo de reparacion no existe!");
+		}
+
+		Integer monto = 0;
+		String tipoMotor = auto.getMotor();
+		if(tipoMotor.equals("GASOLINA")){
+			monto = repTipo.getMontoGasolina();
+		}
+		else if(tipoMotor.equals("DIESEL")){
+			monto = repTipo.getMontoDiesel();
+		}
+		else if(tipoMotor.equals("HIBRIDO")){
+			monto = repTipo.getMontoHibrido();
+		}
+		else if(tipoMotor.equals("ELECTRICO")){
+			monto = repTipo.getMontoElectrico();
+		}
+		else{
+			throw new Exception("El tipo motor \"" +  tipoMotor + "\" no tiene monto asociado!");
+		}
+
 		reparacion.setMonto(monto);
 		reparacion = reparacionRepository.save(reparacion);
 

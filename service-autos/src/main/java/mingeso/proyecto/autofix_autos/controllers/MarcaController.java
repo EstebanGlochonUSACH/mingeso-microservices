@@ -29,27 +29,31 @@ public class MarcaController
 	}
 
 	@GetMapping("/{id}")
-	public ResponseEntity<Marca> getMarcaById(@PathVariable Long id) {
+	public ResponseEntity<MarcaDTO> getMarcaById(@PathVariable Long id) {
 		Marca marca = marcaService.getMarcaById(id);
 		if (marca != null) {
-			return ResponseEntity.ok(marca);
+			return ResponseEntity.ok(new MarcaDTO(marca.getId(), marca.getNombre(), 0L));
 		} else {
 			return ResponseEntity.notFound().build();
 		}
 	}
 
 	@PostMapping("/create")
-	public ResponseEntity<Marca> createMarca(@RequestBody MarcaDTO marcaDTO) {
+	public ResponseEntity<MarcaDTO> createMarca(@RequestBody MarcaDTO marcaDTO) {
 		String nombre = marcaDTO.getNombre(); 
 		Marca marca = marcaService.createMarca(nombre);
-		return ResponseEntity.status(HttpStatus.CREATED).body(marca);
+		return ResponseEntity.status(HttpStatus.CREATED).body(
+			new MarcaDTO(marca.getId(), marca.getNombre(), 0L)
+		);
 	}
 
 	@PutMapping("/{id}/update")
-	public ResponseEntity<Marca> updateMarca(@PathVariable Long id, @RequestParam String nombre) {
+	public ResponseEntity<MarcaDTO> updateMarca(@PathVariable Long id, @RequestParam String nombre) {
 		Marca updatedMarca = marcaService.updateMarca(id, nombre);
 		if (updatedMarca != null) {
-			return ResponseEntity.ok(updatedMarca);
+			return ResponseEntity.ok(
+				new MarcaDTO(updatedMarca.getId(), updatedMarca.getNombre(), 0L)
+			);
 		} else {
 			return ResponseEntity.notFound().build();
 		}

@@ -19,9 +19,7 @@ public class Bono
 	@GeneratedValue(strategy=GenerationType.AUTO)
 	private Long id_bono;
 
-	@ManyToOne(fetch = FetchType.EAGER)
-	@JoinColumn(name = "id_marca")
-	public Marca marca;
+	public Long id_marca;
 
 	private Integer monto;
 
@@ -31,15 +29,12 @@ public class Bono
 	@Column(name = "fecha_termino")
 	private LocalDateTime fechaTermino;
 
-	@OneToOne(mappedBy = "bono", fetch = FetchType.LAZY)
-	private Orden orden;
-
 	private Boolean usado;
 
 	public Bono() {}
 
-	public Bono(Marca marca, Integer monto, LocalDateTime fechaInicio, LocalDateTime fechaTermino){
-		this.marca = marca;
+	public Bono(Long id_marca, Integer monto, LocalDateTime fechaInicio, LocalDateTime fechaTermino){
+		this.id_marca = id_marca;
 		this.monto = monto;
 		this.usado = false;
 		this.fechaInicio = fechaInicio;
@@ -54,12 +49,12 @@ public class Bono
 		this.id_bono = id_bono;
 	}
 
-	public Marca getMarca(){
-		return marca;
+	public Long getMarca(){
+		return id_marca;
 	}
 
-	public void setMarca(Marca marca){
-		this.marca = marca;
+	public void setMarca(Long marca){
+		this.id_marca = marca;
 	}
 
 	public Integer getMonto(){

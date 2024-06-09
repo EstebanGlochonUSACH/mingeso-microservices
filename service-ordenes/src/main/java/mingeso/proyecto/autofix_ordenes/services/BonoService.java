@@ -3,13 +3,11 @@ package mingeso.proyecto.autofix_ordenes.services;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
+import mingeso.proyecto.autofix_ordenes.repositories.BonoRepository;
 import mingeso.proyecto.autofix_ordenes.dtos.BonoGroupedByFechaInicioDTO;
 import mingeso.proyecto.autofix_ordenes.entities.Bono;
-import mingeso.proyecto.autofix_ordenes.entities.Marca;
-import mingeso.proyecto.autofix_ordenes.repositories.BonoRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 @Service
 public class BonoService
@@ -25,7 +23,11 @@ public class BonoService
 		return bonoRepository.findAll();
 	}
 
-	public List<Bono> getFilteredBono(Marca marca, LocalDateTime fecha) {
+	public Bono getBono(Long id) {
+		return bonoRepository.findById(id).orElse(null);
+	}
+
+	public List<Bono> getFilteredBono(Long marca, LocalDateTime fecha) {
 		if (marca != null) {
 			return bonoRepository.findAllByMarcaAndFecha(marca, fecha);
 		}
@@ -38,7 +40,7 @@ public class BonoService
 		return bonoRepository.groupByFechaInicio();
 	}
 
-	public Bono createBono(Marca marca, Integer monto, LocalDateTime day) {
+	public Bono createBono(Long marca, Integer monto, LocalDateTime day) {
 		LocalDateTime workingDate = day;
 		if(workingDate == null){
 			workingDate = LocalDateTime.now();
@@ -49,7 +51,7 @@ public class BonoService
 		return bonoRepository.save(bono);
 	}
 
-	public List<Bono> createBonos(Marca marca, Integer monto, Integer cantidad, LocalDateTime day) {
+	public List<Bono> createBonos(Long marca, Integer monto, Integer cantidad, LocalDateTime day) {
 		List<Bono> bonos = new ArrayList<>();
 		Bono bono;
 		for(int i = 0; i < cantidad; ++i){

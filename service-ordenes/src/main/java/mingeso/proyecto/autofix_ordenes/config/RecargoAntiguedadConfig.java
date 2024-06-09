@@ -1,7 +1,5 @@
 package mingeso.proyecto.autofix_ordenes.config;
 
-import mingeso.proyecto.autofix_ordenes.entities.Auto;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -9,7 +7,7 @@ import java.util.Map;
 
 public class RecargoAntiguedadConfig
 {
-	private static final Map<Auto.Tipo, List<Double>> RECARGOS = new HashMap<>();
+	private static final Map<String, List<Double>> RECARGOS = new HashMap<>();
 
 	static {
 		// Para auto tipo SEDAN:
@@ -18,7 +16,7 @@ public class RecargoAntiguedadConfig
 		listSedan.add(0.05);
 		listSedan.add(0.09);
 		listSedan.add(0.15);
-		RECARGOS.put(Auto.Tipo.SEDAN, listSedan);
+		RECARGOS.put("SEDAN", listSedan);
 
 		// Para auto tipo HATCHBACK:
 		List<Double> listHatchback = new ArrayList<>();
@@ -26,7 +24,7 @@ public class RecargoAntiguedadConfig
 		listHatchback.add(0.05);
 		listHatchback.add(0.09);
 		listHatchback.add(0.15);
-		RECARGOS.put(Auto.Tipo.HATCHBACK, listHatchback);
+		RECARGOS.put("HATCHBACK", listHatchback);
 
 		// Para auto tipo SUV:
 		List<Double> listSuv = new ArrayList<>();
@@ -34,7 +32,7 @@ public class RecargoAntiguedadConfig
 		listSuv.add(0.07);
 		listSuv.add(0.11);
 		listSuv.add(0.20);
-		RECARGOS.put(Auto.Tipo.SUV, listSuv);
+		RECARGOS.put("SUV", listSuv);
 
 		// Para auto tipo PICKUP:
 		List<Double> listPickup = new ArrayList<>();
@@ -42,7 +40,7 @@ public class RecargoAntiguedadConfig
 		listPickup.add(0.07);
 		listPickup.add(0.11);
 		listPickup.add(0.20);
-		RECARGOS.put(Auto.Tipo.PICKUP, listPickup);
+		RECARGOS.put("PICKUP", listPickup);
 
 		// Para auto tipo FURGONETA:
 		List<Double> listFurgoneta = new ArrayList<>();
@@ -50,10 +48,10 @@ public class RecargoAntiguedadConfig
 		listFurgoneta.add(0.07);
 		listFurgoneta.add(0.11);
 		listFurgoneta.add(0.20);
-		RECARGOS.put(Auto.Tipo.FURGONETA, listFurgoneta);
+		RECARGOS.put("FURGONETA", listFurgoneta);
 	}
 
-	public static Double getRecargo(Auto.Tipo tipoAuto, Integer antiguedad) throws Exception {
+	public static Double getRecargo(String tipoAuto, Integer antiguedad) throws Exception {
 		List<Double> recargos = RECARGOS.get(tipoAuto);
 		if (recargos != null) {
 			if(antiguedad < 6){
@@ -67,6 +65,6 @@ public class RecargoAntiguedadConfig
 			}
 			return recargos.get(3);
 		}
-		throw new Exception(String.format("No se pudo obtener la recarga (tipoAuto=%s, antiguedad=%s)", tipoAuto.name(), antiguedad.toString()));
+		throw new Exception(String.format("No se pudo obtener la recarga (tipoAuto=%s, antiguedad=%s)", tipoAuto, antiguedad.toString()));
 	}
 }

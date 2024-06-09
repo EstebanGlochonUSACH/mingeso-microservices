@@ -9,10 +9,10 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import lombok.Getter;
 
 @Entity
-public class Auto
-{
+public class Auto {
 	public enum Tipo { SEDAN, HATCHBACK, SUV, PICKUP, FURGONETA };
 	public enum Motor { GASOLINA, DIESEL, HIBRIDO, ELECTRICO };
 

@@ -4,6 +4,11 @@ import java.time.DayOfWeek;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
+import java.util.List;
+
+import mingeso.proyecto.autofix_ordenes.clients.AutosFeignClient;
+import mingeso.proyecto.autofix_ordenes.dtos.AutoDTO;
+import mingeso.proyecto.autofix_ordenes.repositories.BonoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -13,11 +18,8 @@ import mingeso.proyecto.autofix_ordenes.config.DescuentoReparacionesConfig;
 import mingeso.proyecto.autofix_ordenes.config.RecargoAntiguedadConfig;
 import mingeso.proyecto.autofix_ordenes.config.RecargoAtrasoConfig;
 import mingeso.proyecto.autofix_ordenes.config.RecargoKilometrajeConfig;
-import mingeso.proyecto.autofix_ordenes.entities.Auto;
 import mingeso.proyecto.autofix_ordenes.entities.Bono;
-import mingeso.proyecto.autofix_ordenes.entities.Marca;
 import mingeso.proyecto.autofix_ordenes.entities.Orden;
-import mingeso.proyecto.autofix_ordenes.repositories.BonoRepository;
 import mingeso.proyecto.autofix_ordenes.repositories.OrdenRepository;
 
 @Service
@@ -27,25 +29,28 @@ public class OrdenService
 	
 	private final OrdenRepository ordenRepository;
 	private final BonoRepository bonoRepository;
+	private final AutosFeignClient autosClient;
 
 	@Autowired
-	public OrdenService(OrdenRepository ordenRepository, BonoRepository bonoRepository) {
+	public OrdenService(
+		OrdenRepository ordenRepository,
+		BonoRepository bonoRepository,
+		AutosFeignClient autosClient
+	) {
 		this.ordenRepository = ordenRepository;
 		this.bonoRepository = bonoRepository;
+		this.autosClient = autosClient;
 	}
 
-	public Page<Orden> getAllOrdenes(Auto auto, Pageable pageable) {
-		if(auto != null){
-			return ordenRepository.findByAuto(auto, pageable);
+	public Page<Orden> getPagedOrdenes(Pageable pageable, Long id_auto) {
+		if(id_auto != null){
+			return ordenRepository.findById_auto(id_auto, pageable);
 		}
 		return ordenRepository.findAllSorted(pageable);
 	}
 
-	public Page<Orden> getAllOrdenesByPatente(String patente, Pageable pageable) {
-		if(patente != null){
-			return ordenRepository.findByAutoPatente(patente, pageable);
-		}
-		return ordenRepository.findAllSorted(pageable);
+	public List<Orden> getAllOrdenes() {
+		return ordenRepository.findAllSorted();
 	}
 
 	public Orden getOrdenById(Long id) {
@@ -62,14 +67,26 @@ public class OrdenService
 		return(isMondayOrThursday && isBetween9And12);
 	}
 
+	private AutoDTO getAuto(Orden orden) throws Exception {
+		Long id_auto = orden.getAuto();
+		if(id_auto == null){
+			throw new Exception("La orden no tiene auto!");
+		}
+		AutoDTO auto = autosClient.getAutoById(id_auto);
+		if(auto == null){
+			throw new Exception("El auto no existe!");
+		}
+		return auto;
+	}
+
 	@Transactional
 	public Orden createOrden(Orden orden) throws Exception {
 		// Registrar Bono
-		Auto auto = orden.getAuto();
+		AutoDTO auto = getAuto(orden);
 		Bono bono = orden.getBono();
 		if(bono != null){
-			Marca marca = bono.getMarca();
-			if(marca != null && !marca.equals(auto.getMarca())){
+			Long marca = bono.getMarca();
+			if(marca != null && !marca.equals(auto.getMarca().getId())){
 				throw new Exception("No se puede registrar un bono de una Marca distinta a la del auto!");
 			}
 			else if(bono.getUsado()){
@@ -91,10 +108,7 @@ public class OrdenService
 		if (existingOrden == null) return null;
 
 		// Validar que el bono no este usado y que la orden no tenga bono
-		Auto auto = existingOrden.getAuto();
-		if(auto == null){
-			throw new Exception("La orden no tiene auto!");
-		}
+		AutoDTO auto = getAuto(existingOrden);
 
 		Bono updatedBono = updatedOrden.getBono();
 		Bono bono = null;
@@ -103,7 +117,7 @@ public class OrdenService
 		}
 
 		// Para reparaciones, descuentos y recargas
-		Auto.Tipo autoTipo = auto.getTipo();
+		String autoTipo = auto.getTipo();
 		Double descuento;
 		Long montoTmp;
 		Long montoReparaciones = updatedOrden.getMontoReparaciones();
@@ -113,8 +127,8 @@ public class OrdenService
 		// Bono
 		if(bono != null){
 			// Checks
-			Marca marca = bono.getMarca();
-			if(marca != null && !marca.equals(auto.getMarca())){
+			Long marca = bono.getMarca();
+			if(marca != null && !marca.equals(auto.getMarca().getId())){
 				throw new Exception("No se puede registrar un bono de una Marca distinta a la del auto!");
 			}
 

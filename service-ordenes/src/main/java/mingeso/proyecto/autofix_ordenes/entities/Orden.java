@@ -22,9 +22,7 @@ public class Orden
 	@GeneratedValue(strategy=GenerationType.AUTO)
 	private Long id_orden;
 
-	@ManyToOne(fetch = FetchType.EAGER)
-	@JoinColumn(name = "id_auto")
-	private Auto auto;
+	private Long id_auto;
 
 	@OneToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "id_bono", nullable = true)
@@ -69,8 +67,8 @@ public class Orden
 
 	public Orden() {}
 
-	public Orden(Auto auto){
-		this.auto = auto;
+	public Orden(Long id_auto){
+		this.id_auto = id_auto;
 		this.fechaIngreso = null;
 		this.fechaSalida = null;
 		this.fechaEntrega = null;
@@ -100,12 +98,12 @@ public class Orden
 		this.montoReparaciones = montoReparaciones;
 	}
 
-	public Auto getAuto() {
-		return auto;
+	public Long getAuto() {
+		return id_auto;
 	}
 
-	public void setAuto(Auto auto) {
-		this.auto = auto;
+	public void setAuto(Long auto) {
+		this.id_auto = auto;
 	}
 
 	public Bono getBono() {
