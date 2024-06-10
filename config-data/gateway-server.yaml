@@ -28,18 +28,18 @@ spring:
         - id: autofix-autos
           uri: lb://autofix-autos-service:8090
           predicates:
-            - Path=/autos/**
-            - Path=/marcas/**
+            - Path=/autos/
+            - Path=/marcas/
         - id: autofix-reparaciones
           uri: lb://autofix-reparaciones-service:8091
           predicates:
-            - Path=/reparaciones/**
+            - Path=/reparaciones/
         - id: autofix-ordenes
           uri: lb://autofix-ordenes-service:8092
           predicates:
-            - Path=/bonos/**
-            - Path=/ordenes/**
+            - Path=/bonos/
+            - Path=/ordenes/
         - id: autofix-reportes
           uri: lb://autofix-reportes-service:8093
           predicates:
-            - Path=/reportes/**
+            - Path=/reportes/
