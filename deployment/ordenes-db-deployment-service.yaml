@@ -1,0 +1,90 @@
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: ordenes-db-pv
+  labels:
+    type: local
+spec:
+  storageClassName: standard
+  capacity:
+    storage: 1Gi
+  accessModes:
+    - ReadWriteOnce
+  hostPath:
+    path: "/data/ordenes-db-data"
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: ordenes-db-pvc
+  labels:
+    app: postgres
+    tier: database
+spec:
+  storageClassName: standard
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ordenes-db-deployment
+  labels:
+    app: ordenes-db-deployment
+    tier: database
+spec:
+  selector:
+    matchLabels:
+      app: ordenes-db-deployment
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: ordenes-db-deployment
+        tier: database
+    spec:
+      containers:
+        - name: ordenes-db
+          image: postgres
+          imagePullPolicy: "IfNotPresent"
+          ports:
+            - containerPort: 5432
+          env:
+            - name: POSTGRES_USER
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-credentials
+                  key: DB_USER_ORDENES
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-credentials
+                  key: DB_PASSWORD_ORDENES
+          volumeMounts:
+            - mountPath: /var/lib/postgresql/data
+              name: ordenes-db-data
+      volumes:
+        - name: ordenes-db-data
+          persistentVolumeClaim:
+            claimName: ordenes-db-pvc
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: ordenes-db-service
+  labels:
+    app: ordenes-db-service
+    tier: database
+spec:
+  ports:
+    - port: 5434
+      targetPort: 5432
+      protocol: TCP
+  selector:
+    app: ordenes-db-deployment
+    tier: database
+  type: LoadBalancer

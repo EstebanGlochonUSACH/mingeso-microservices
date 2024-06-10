@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
         - name: eureka-server
-          image: polloh/eureka-server
+          image: estebanglochon/autofix-service-eureka
           ports:
             - containerPort: 8761
 ---
