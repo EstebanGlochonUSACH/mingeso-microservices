@@ -21,4 +21,19 @@ spec:
             - containerPort: 8093
           env:
             - name: SERVER_PORT
-              value: "0"
+              value: "8093"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: autofix-reportes-service
+  labels:
+    app: autofix-reportes-service
+spec:
+  selector:
+    app: autofix-reportes-deployment
+  ports:
+    - protocol: TCP
+      port: 8093
+      targetPort: 8093
+  type: LoadBalancer

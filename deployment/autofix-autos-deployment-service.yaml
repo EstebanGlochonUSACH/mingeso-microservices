@@ -21,7 +21,7 @@ spec:
             - containerPort: 8090
           env:
             - name: SERVER_PORT
-              value: "0"
+              value: "8090"
             - name: DB_HOST
               valueFrom:
                 configMapKeyRef:
@@ -47,3 +47,18 @@ spec:
                 secretKeyRef:
                   name: postgres-credentials
                   key: DB_PASSWORD_AUTOS
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: autofix-autos-service
+  labels:
+    app: autofix-autos-service
+spec:
+  selector:
+    app: autofix-autos-deployment
+  ports:
+    - protocol: TCP
+      port: 8090
+      targetPort: 8090
+  type: LoadBalancer
