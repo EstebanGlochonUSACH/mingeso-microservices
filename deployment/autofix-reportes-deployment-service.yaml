@@ -20,6 +20,8 @@ spec:
           ports:
             - containerPort: 8093
           env:
+            - name: TZ
+              value: America/Santiago
             - name: SERVER_PORT
               value: "8093"
 ---

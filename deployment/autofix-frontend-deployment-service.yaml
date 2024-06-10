@@ -20,6 +20,8 @@ spec:
           ports:
             - containerPort: 3000
           env:
+            - name: TZ
+              value: America/Santiago
             - name: BACKEND_URI
               value: "http://gateway-server-deployment:8080"
             - name: SERVICES_AUTOS_URI

@@ -54,6 +54,8 @@ spec:
           ports:
             - containerPort: 5432
           env:
+            - name: TZ
+              value: America/Santiago
             - name: POSTGRES_USER
               valueFrom:
                 secretKeyRef:
