@@ -11,8 +11,7 @@ import Row from 'react-bootstrap/Row';
 import Alert from 'react-bootstrap/Alert';
 import axios, { type AxiosError } from "axios";
 
-const RegexpAuto1 = /^[A-Z]{2}[1-9]{1}[0-9]{3}$/;
-const RegexpAuto2 = /^[BCDFGHJKLPRSTVWXYZ]{4}[0-9]{2}$/;
+const RegexpAuto = /^[a-zA-Z]{4}[0-9]{2}$/;
 
 const currentYearPlus1 = (new Date()).getFullYear() + 1;
 
@@ -21,7 +20,7 @@ const formValidator = (values: any) => {
 	// Patente
 	if (!values.patente) {
 		errors.patente = 'Campo requerido';
-	} else if (!RegexpAuto1.test(values.patente) && !RegexpAuto2.test(values.patente)) {
+	} else if (!RegexpAuto.test(values.patente)) {
 		errors.patente = 'Código patente inválido';
 	}
 	// Marca
@@ -82,6 +81,7 @@ const CreateAuto: FC = () => {
 		const marcaId = parseInt(values.marca);
 		autoData.marca = marcas.find(m => m.id === marcaId);
 		if(!autoData.marca) return;
+		autoData.patente = (autoData.patente as string).toUpperCase();
 
 		setState(s => ({ ...s, loading: true, response: false }));
 		axios.post('/api/autos', autoData)
