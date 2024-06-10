@@ -1,0 +1,4 @@
+#!/bin/bash
+
+docker build -t estebanglochon/autofix-service-autos .
+docker push estebanglochon/autofix-service-autos

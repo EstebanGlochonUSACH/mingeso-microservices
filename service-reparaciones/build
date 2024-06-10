@@ -1,0 +1,4 @@
+#!/bin/bash
+
+docker build -t estebanglochon/autofix-service-reparaciones .
+docker push estebanglochon/autofix-service-reparaciones

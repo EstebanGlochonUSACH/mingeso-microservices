@@ -1,0 +1,4 @@
+#!/bin/bash
+
+docker build -t estebanglochon/autofix-service-ordenes .
+docker push estebanglochon/autofix-service-ordenes
