@@ -8,6 +8,7 @@ import java.util.List;
 
 import mingeso.proyecto.autofix_ordenes.clients.AutosFeignClient;
 import mingeso.proyecto.autofix_ordenes.dtos.AutoDTO;
+import mingeso.proyecto.autofix_ordenes.dtos.OrdenDTO;
 import mingeso.proyecto.autofix_ordenes.repositories.BonoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -68,8 +69,7 @@ public class OrdenService
 		return(isMondayOrThursday && isBetween9And12);
 	}
 
-	private AutoDTO getAuto(Orden orden) throws Exception {
-		Long id_auto = orden.getId_auto();
+	private AutoDTO getAuto(Long id_auto) throws Exception {
 		if(id_auto == null){
 			throw new Exception("La orden no tiene auto!");
 		}
@@ -81,9 +81,12 @@ public class OrdenService
 	}
 
 	@Transactional
-	public Orden createOrden(Orden orden) throws Exception {
+	public Orden createOrden(OrdenDTO orden) throws Exception {
 		// Registrar Bono
-		AutoDTO auto = getAuto(orden);
+		AutoDTO auto = getAuto(orden.getAuto().getId());
+		Orden newOrden = new Orden();
+		newOrden.setId_auto(auto.getId());
+
 		Bono bono = orden.getBono();
 		if(bono != null){
 			Long marca = bono.getMarca();
@@ -96,11 +99,11 @@ public class OrdenService
 			else{
 				bono.setUsado(true);
 				bonoRepository.save(bono);
-				orden.setBono(bono);
+				newOrden.setBono(bono);
 			}
 		}
 
-		return ordenRepository.save(orden);
+		return ordenRepository.save(newOrden);
 	}
 
 	@Transactional
@@ -109,7 +112,7 @@ public class OrdenService
 		if (existingOrden == null) return null;
 
 		// Validar que el bono no este usado y que la orden no tenga bono
-		AutoDTO auto = getAuto(existingOrden);
+		AutoDTO auto = getAuto(existingOrden.getId_auto());
 
 		Bono updatedBono = updatedOrden.getBono();
 		Bono bono = null;

@@ -6,7 +6,7 @@ import lombok.Setter;
 @Getter
 @Setter
 public class AutoDTO {
-    Long id_auto;
+    Long id;
     String patente;
     MarcaDTO marca;
     String modelo;

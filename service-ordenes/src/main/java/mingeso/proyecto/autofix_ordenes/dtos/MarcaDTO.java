@@ -9,4 +9,8 @@ public class MarcaDTO {
 	private Long id;
 	private String nombre;
 	private Long totalAutos;
+
+	public MarcaDTO(){
+		this.totalAutos = 0L;
+	}
 }
