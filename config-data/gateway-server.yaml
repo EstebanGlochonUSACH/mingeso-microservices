@@ -26,20 +26,20 @@ spring:
             allowedHeaders: "*"
       routes:
         - id: autofix-autos
-          uri: http://autofix-autos-service:8090
+          uri: lb://autofix-autos:8090
           predicates:
             - Path=/autos/**
             - Path=/marcas/**
         - id: autofix-reparaciones
-          uri: http://autofix-reparaciones-service:8091
+          uri: lb://autofix-reparaciones:8091
           predicates:
             - Path=/reparaciones/**
         - id: autofix-ordenes
-          uri: http://autofix-ordenes-service:8092
+          uri: lb://autofix-ordenes:8092
           predicates:
             - Path=/bonos/**
             - Path=/ordenes/**
         - id: autofix-reportes
-          uri: http://autofix-reportes-service:8093
+          uri: lb://autofix-reportes:8093
           predicates:
             - Path=/reportes/**
