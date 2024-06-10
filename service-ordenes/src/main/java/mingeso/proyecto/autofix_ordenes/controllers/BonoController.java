@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import mingeso.proyecto.autofix_ordenes.clients.MarcasFeignClient;
+import mingeso.proyecto.autofix_ordenes.dtos.BonoDTO;
 import mingeso.proyecto.autofix_ordenes.dtos.BonoGroupedByFechaInicioDTO;
 import mingeso.proyecto.autofix_ordenes.dtos.MarcaDTO;
 import mingeso.proyecto.autofix_ordenes.entities.Bono;
@@ -32,23 +33,23 @@ public class BonoController
 	}
 
 	@GetMapping
-	public ResponseEntity<List<Bono>> getAllBonos(
+	public ResponseEntity<List<BonoDTO>> getAllBonos(
         @RequestParam(required = false) Long marcaId,
         @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime fecha
 	) {
 		if(marcaId != null){
-			List<Bono> bonos = bonoService.getFilteredBono(marcaId, fecha);
+			List<BonoDTO> bonos = bonoService.getFilteredBono(marcaId, fecha);
 			return ResponseEntity.ok(bonos);
 		}
 		else{
-			List<Bono> bonos = bonoService.getAllBonos();
+			List<BonoDTO> bonos = bonoService.getAllBonos();
 			return ResponseEntity.ok(bonos);
 		}
 	}
 
 	@GetMapping("/{id}")
-	public ResponseEntity<Bono> getBono(@PathVariable Long id) {
-		Bono updatedBono = bonoService.getBono(id);
+	public ResponseEntity<BonoDTO> getBono(@PathVariable Long id) {
+		BonoDTO updatedBono = bonoService.getBono(id);
 		if (updatedBono != null) {
 			return ResponseEntity.ok(updatedBono);
 		} else {
@@ -63,10 +64,10 @@ public class BonoController
 
 	@PostMapping("/create")
 	@Transactional
-	public ResponseEntity<List<Bono>> createBono(@RequestParam Long marcaId, @RequestParam Integer monto, @RequestParam Integer cantidad) {
+	public ResponseEntity<List<BonoDTO>> createBono(@RequestParam Long marcaId, @RequestParam Integer monto, @RequestParam Integer cantidad) {
 		MarcaDTO marca = marcasClient.getMarcaById(marcaId);
 		if (marca != null) {
-			List<Bono> bonos = bonoService.createBonos(marcaId, monto, cantidad, null);
+			List<BonoDTO> bonos = bonoService.createBonos(marcaId, monto, cantidad, null);
 			return ResponseEntity.status(HttpStatus.CREATED).body(bonos);
 		} else {
 			return ResponseEntity.notFound().build();
@@ -74,8 +75,8 @@ public class BonoController
 	}
 
 	@PutMapping("/{id}/update")
-	public ResponseEntity<Bono> updateBono(@PathVariable Long id, @RequestParam Boolean usado) {
-		Bono updatedBono = bonoService.updateBono(id, usado);
+	public ResponseEntity<BonoDTO> updateBono(@PathVariable Long id, @RequestParam Boolean usado) {
+		BonoDTO updatedBono = bonoService.updateBono(id, usado);
 		if (updatedBono != null) {
 			return ResponseEntity.ok(updatedBono);
 		} else {

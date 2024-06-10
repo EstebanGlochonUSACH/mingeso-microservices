@@ -3,14 +3,14 @@ import type { Marca } from "../Marcas/Marcas";
 
 export interface Bono {
 	id: number,
-	fechaInicio: string,
-	fechaTermino: string,
 	marca: {
 		id: number,
 		nombre: string
 	},
 	monto: number,
 	usado: boolean,
+	fechaInicio: string,
+	fechaTermino: string,
 };
 
 export interface BonoGroup {
