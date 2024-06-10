@@ -1,4 +1,4 @@
-package mingeso.proyecto.autofix_ordenes;
+package mingeso.proyecto.autofix_reparaciones;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;

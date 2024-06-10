@@ -85,7 +85,7 @@ public class ReporteService
 			}
 		}
 
-		return new ArrayList(map.values());
+		return new ArrayList<>(map.values());
 	}
 
 	private Boolean inMonth(LocalDateTime dateTime, LocalDate date){
@@ -146,6 +146,6 @@ public class ReporteService
 			}
 		}
 
-		return new ArrayList(map.values());
+		return new ArrayList<>(map.values());
 	}
 }
