@@ -1,5 +1,9 @@
 server:
   port: 8080
+logging:
+  level:
+    root: INFO
+    org.springframework.cloud.gateway: DEBUG
 eureka:
   client:
     fetch-registry: true
