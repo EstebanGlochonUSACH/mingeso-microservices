@@ -3,6 +3,7 @@ package mingeso.proyecto.autofix_ordenes.controllers;
 import mingeso.proyecto.autofix_ordenes.clients.AutosFeignClient;
 import mingeso.proyecto.autofix_ordenes.dtos.AutoDTO;
 import mingeso.proyecto.autofix_ordenes.dtos.OrdenDTO;
+import mingeso.proyecto.autofix_ordenes.dtos.ReparacionDTO;
 import mingeso.proyecto.autofix_ordenes.entities.Orden;
 import mingeso.proyecto.autofix_ordenes.entities.Reparacion;
 import mingeso.proyecto.autofix_ordenes.models.ResponseObject;
@@ -160,7 +161,7 @@ public class OrdenController
 	@Transactional
 	public ResponseEntity<OrdenDTO> createReparacion(
 		@PathVariable Long id_orden,
-		@RequestBody Reparacion reparacion
+		@RequestBody ReparacionDTO reparacion
 	) throws Exception {
 		Orden orden = reparacionService.createReparacion(reparacion);
 		if(!orden.getId().equals(id_orden)) {
@@ -170,7 +171,7 @@ public class OrdenController
 		return ResponseEntity.status(HttpStatus.CREATED).body(dto);
 	}
 
-	@DeleteMapping("/{id_orden}/reparaciones/{id_reparacion}\"")
+	@DeleteMapping("/{id_orden}/reparaciones/{id_reparacion}")
 	@Transactional
 	public ResponseEntity<OrdenDTO> deleteReparacion(
 		@PathVariable Long id_orden,

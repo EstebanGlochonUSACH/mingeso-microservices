@@ -26,10 +26,11 @@ public class Reparacion
 
 	public Reparacion() {}
 
-	public Reparacion(Orden orden, Long tipo, Integer monto){
+	public Reparacion(Orden orden, Long id_tipo, Integer monto){
 		this.orden = orden;
-		this.id_tipo = tipo;
+		this.id_tipo = id_tipo;
 		this.monto = monto;
+		this.fechaRegistro = LocalDateTime.now();
 	}
 
 	public Long getId(){

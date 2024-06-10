@@ -6,6 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import mingeso.proyecto.autofix_ordenes.dtos.ReparacionDTO;
 import mingeso.proyecto.autofix_ordenes.entities.Orden;
 import mingeso.proyecto.autofix_ordenes.entities.Reparacion;
 import mingeso.proyecto.autofix_ordenes.services.ReparacionService;
@@ -38,7 +40,7 @@ public class ReparacionController
 	}
 
 	@PostMapping("/create")
-	public ResponseEntity<Orden> createReparacion(@RequestBody Reparacion reparacion) {
+	public ResponseEntity<Orden> createReparacion(@RequestBody ReparacionDTO reparacion) {
 		try{
 			Orden orden = reparacionService.createReparacion(reparacion);
 			return ResponseEntity.status(HttpStatus.CREATED).body(orden);

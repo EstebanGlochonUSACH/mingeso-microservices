@@ -1,10 +1,11 @@
 package mingeso.proyecto.autofix_ordenes.services;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import mingeso.proyecto.autofix_ordenes.clients.AutosFeignClient;
 import mingeso.proyecto.autofix_ordenes.clients.ReparacionesFeignClient;
 import mingeso.proyecto.autofix_ordenes.dtos.AutoDTO;
+import mingeso.proyecto.autofix_ordenes.dtos.OrdenDTO;
+import mingeso.proyecto.autofix_ordenes.dtos.ReparacionDTO;
 import mingeso.proyecto.autofix_ordenes.dtos.ReparacionTipoDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -41,24 +42,40 @@ public class ReparacionService
 		return reparacionRepository.findById(id).orElse(null);
 	}
 
-	private Orden actualizarOrden(Long ordenId) throws Exception {
+	private Orden actualizarOrden(Long ordenId, Reparacion reparacion, String type) throws Exception {
 		Orden orden = ordenService.getOrdenById(ordenId);
 		if(orden == null) return null;
 		Long montoReparaciones = 0L;
 		int totalReparaciones = 0;
+		boolean isInList = false;
 		for(Reparacion rep : orden.getReparaciones()){
 			totalReparaciones += 1;
 			montoReparaciones += rep.getMonto();
+			if(rep.getId().equals(reparacion.getId())){
+				isInList = true;
+			}
+		}
+		if(type.equals("add") && !isInList){
+			totalReparaciones += 1;
+			montoReparaciones += reparacion.getMonto();
+		}
+		else if(type.equals("delete") && isInList){
+			totalReparaciones -= 1;
+			montoReparaciones -= reparacion.getMonto();
 		}
 		orden.setMontoReparaciones(montoReparaciones);
 		return ordenService.updateOrden(orden, totalReparaciones);
 	}
 
-	public Orden createReparacion(Reparacion reparacion) throws Exception {
+	public Orden createReparacion(ReparacionDTO reparacionDto) throws Exception {
 		// Definir bien el monto
-		Orden orden = reparacion.getOrden();
-		if(orden == null){
+		OrdenDTO ordenDto = reparacionDto.getOrden();
+		if(ordenDto == null){
 			throw new Exception("La reparacion no tiene \"orden\".");
+		}
+		Orden orden = ordenService.getOrdenById(ordenDto.getId());
+		if(orden == null){
+			throw new Exception("La orden de la reparacion no existe.");
 		}
 
 		Long id_auto = orden.getId_auto();
@@ -70,7 +87,7 @@ public class ReparacionService
 			throw new Exception("El auto de la orden no existe!");
 		}
 
-		ReparacionTipoDTO repTipo = reparacionesClient.getReparacion(reparacion.getTipo());
+		ReparacionTipoDTO repTipo = reparacionesClient.getReparacion(reparacionDto.getId_tipo());
 		if(repTipo == null){
 			throw new Exception("El tipo de reparacion no existe!");
 		}
@@ -85,11 +102,10 @@ public class ReparacionService
 			default -> throw new Exception("El tipo motor \"" + tipoMotor + "\" no tiene monto asociado!");
 		};
 
-		reparacion.setMonto(monto);
-		reparacion.setFechaRegistro(LocalDateTime.now());
-		reparacionRepository.save(reparacion);
+		Reparacion reparacion = new Reparacion(orden, reparacionDto.getId_tipo(), monto);
+		reparacion = reparacionRepository.save(reparacion);
 
-		return actualizarOrden(orden.getId());
+		return actualizarOrden(orden.getId(), reparacion, "add");
 	}
 
 	public Reparacion updateReparacion(Reparacion updatedReparacion) {
@@ -115,6 +131,6 @@ public class ReparacionService
 		// Eliminar reparacion
 		reparacionRepository.deleteById(id);
 
-		return actualizarOrden(orden.getId());
+		return actualizarOrden(orden.getId(), reparacion, "delete");
 	}
 }

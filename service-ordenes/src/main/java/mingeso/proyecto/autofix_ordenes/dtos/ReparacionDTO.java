@@ -6,11 +6,7 @@ import lombok.Setter;
 @Getter
 @Setter
 public class ReparacionDTO {
-    String id;
-    String nombre;
-    Integer montoGasolina;
-    Integer montoDiesel;
-    Integer montoHibrido;
-    Integer montoElectrico;
-    String descripcion;
+    Long id;
+    Long id_tipo;
+    OrdenDTO orden;
 }
