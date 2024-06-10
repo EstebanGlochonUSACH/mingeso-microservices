@@ -28,6 +28,7 @@ spring:
         - id: autofix-autos
           uri: lb://autofix-autos
           predicates:
+            - Path=/autos/**
             - Path=/marcas/**
         - id: autofix-reparaciones
           uri: lb://autofix-reparaciones
@@ -36,6 +37,7 @@ spring:
         - id: autofix-ordenes
           uri: lb://autofix-ordenes
           predicates:
+            - Path=/bonos/**
             - Path=/ordenes/**
         - id: autofix-reportes
           uri: lb://autofix-reportes

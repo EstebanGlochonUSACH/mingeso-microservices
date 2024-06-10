@@ -22,6 +22,14 @@ spec:
           env:
             - name: BACKEND_URI
               value: "http://gateway-server-deployment:8080"
+            - name: SERVICES_AUTOS_URI
+              value: "http://autofix-autos-service:8090"
+            - name: SERVICES_REPARACIONES_URI
+              value: "http://autofix-reparaciones-service:8091"
+            - name: SERVICES_ORDENES_URI
+              value: "http://autofix-ordenes-service:8092"
+            - name: SERVICES_REPORTES_URI
+              value: "http://autofix-reportes-service:8093"
 ---
 apiVersion: v1
 kind: Service
