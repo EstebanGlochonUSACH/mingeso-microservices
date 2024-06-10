@@ -7,7 +7,7 @@ import java.util.List;
 
 @FeignClient(
     name = "autofix-marcas",
-    url = "autofix-autos",
+    url = "autofix-autos-service:8090",
     path = "/marcas"
 )
 public interface MarcasFeignClient {

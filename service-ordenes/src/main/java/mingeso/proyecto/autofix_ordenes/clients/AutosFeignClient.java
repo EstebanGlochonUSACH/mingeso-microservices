@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.*;
 
 @FeignClient(
     name = "autofix-autos",
-    url = "autofix-autos",
+    url = "autofix-autos-service:8090",
     path = "/autos"
 )
 public interface AutosFeignClient {
