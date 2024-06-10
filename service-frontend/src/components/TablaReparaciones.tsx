@@ -1,5 +1,5 @@
-import type { FC } from "react";
-import { type Reparacion, getReparacionDetail } from "../services/Reparaciones/Reparaciones";
+import { useEffect, useState, type FC } from "react";
+import { type Reparacion, type ReparacionTipo, getReparacionTipos } from "../services/Reparaciones/Reparaciones";
 import type { Orden } from "../services/Ordenes/Ordenes";
 import { numberWithCommas } from "../utils/utils";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -8,13 +8,14 @@ import Table from 'react-bootstrap/Table';
 import Button from "react-bootstrap/Button";
 
 interface ReparacionRowProps {
+	tipos: ReparacionTipo[],
 	reparacion: Reparacion,
 	deletable?: boolean,
 	onDelete?: (reparacion: Reparacion) => void,
 };
 
-const ReparacionRow: FC<ReparacionRowProps> = ({ reparacion, deletable = false, onDelete }) => {
-	const detail = getReparacionDetail(reparacion.tipo);
+const ReparacionRow: FC<ReparacionRowProps> = ({ tipos, reparacion, deletable = false, onDelete }) => {
+	const detail = tipos.find(tipo => reparacion.tipo == tipo.id);
 	const handleDelete = () => {
 		if(deletable && onDelete) onDelete(reparacion);
 	};
@@ -25,9 +26,9 @@ const ReparacionRow: FC<ReparacionRowProps> = ({ reparacion, deletable = false, 
 					<div className="reparacion-row-grid">
 						<div>
 							<div>
-								<span className="me-2"><FontAwesomeIcon icon={faScrewdriverWrench} /></span> {detail.label}
+								<span className="me-2"><FontAwesomeIcon icon={faScrewdriverWrench} /></span> {detail?.nombre || 'UNDEFINED'}
 							</div>
-							<div className="fs-small opacity-50">{detail.description}</div>
+							<div className="fs-small opacity-50">{detail?.descripcion || '-'}</div>
 						</div>
 						<div>
 							<Button size="sm" onClick={handleDelete}>Eliminar</Button>
@@ -36,9 +37,9 @@ const ReparacionRow: FC<ReparacionRowProps> = ({ reparacion, deletable = false, 
 				):(
 					<>
 						<div>
-							<span className="me-2"><FontAwesomeIcon icon={faScrewdriverWrench} /></span> {detail.label}
+							<span className="me-2"><FontAwesomeIcon icon={faScrewdriverWrench} /></span> {detail?.nombre || 'UNDEFINED'}
 						</div>
-						<div className="fs-small opacity-50">{detail.description}</div>
+						<div className="fs-small opacity-50">{detail?.descripcion || '-'}</div>
 					</>
 				)}
 			</td>
@@ -55,6 +56,20 @@ interface TablaReparacionesProps {
 };
 
 const TablaReparaciones: FC<TablaReparacionesProps> = ({ orden, reparaciones, deletable = false, onDelete }) => {
+	const [tipos, setTipos] = useState<ReparacionTipo[]>([]);
+
+	useEffect(() => {
+		if(tipos.length == 0){
+			getReparacionTipos()
+			.then(tipos => setTipos(tipos))
+			.catch(() => setTipos([]));
+		}
+	}, [tipos, setTipos]);
+
+	if(tipos.length == 0){
+		<div>Cargando...</div>
+	}
+
 	return (
 		<Table bordered className="mt-3">
 			<thead>
@@ -68,6 +83,7 @@ const TablaReparaciones: FC<TablaReparacionesProps> = ({ orden, reparaciones, de
 					reparaciones.map((reparacion, index) => (
 						<ReparacionRow
 							key={index}
+							tipos={tipos}
 							reparacion={reparacion}
 							deletable={deletable}
 							onDelete={onDelete}

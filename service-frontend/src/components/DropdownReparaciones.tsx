@@ -1,13 +1,13 @@
 import { useReducer, type FC, useEffect } from "react";
-import { getReparacionDetail, getTipoReparacion, type Reparacion, type ReparacionTipoDetail } from "../services/Reparaciones/Reparaciones";
+import { getReparacionTipos, type Reparacion, type ReparacionTipo } from "../services/Reparaciones/Reparaciones";
 import type { ReducerAction } from "../types/Reducer";
 import type { Orden } from "../services/Ordenes/Ordenes";
 import Dropdown from 'react-bootstrap/Dropdown';
 
 interface ReducerState {
 	loading: boolean,
-	tipos: ReparacionTipoDetail[],
-	filtered: ReparacionTipoDetail[],
+	tipos: ReparacionTipo[],
+	filtered: ReparacionTipo[],
 };
 
 const DEFAULT_STATE: ReducerState = {
@@ -27,13 +27,13 @@ const reducerHandler = (state: ReducerState, action: ReducerAction): ReducerStat
 		return { ...state, loading: true };
 	}
 	else if(action.type === actions.FETCH_DONE){
-		const tipos: ReparacionTipoDetail[] = action.tipos;
+		const tipos: ReparacionTipo[] = action.tipos;
 		const reparaciones: Reparacion[] = action.reparaciones;
 
 		let filtered = tipos;
 		if(reparaciones.length > 0 && tipos.length > 0){
-			const codes = reparaciones.map(r => r.tipo);
-			filtered = tipos.filter(tipo => !codes.includes(tipo.code));
+			const ids = reparaciones.map(r => r.tipo);
+			filtered = tipos.filter(tipo => !ids.includes(tipo.id));
 		}
 
 		return {
@@ -49,8 +49,8 @@ const reducerHandler = (state: ReducerState, action: ReducerAction): ReducerStat
 
 		let filtered = tipos;
 		if(reparaciones.length > 0 && tipos.length > 0){
-			const codes = reparaciones.map(r => r.tipo);
-			filtered = tipos.filter(tipo => !codes.includes(tipo.code));
+			const ids = reparaciones.map(r => r.tipo);
+			filtered = tipos.filter(tipo => !ids.includes(tipo.id));
 		}
 
 		return {
@@ -76,9 +76,8 @@ const DropdownReparaciones: FC<DropdownReparacionesProps> = ({ loading, orden, r
 		if(orden){
 			if(state.loading){
 				dispatch({ type: actions.FETCHING });
-				getTipoReparacion(orden)
-				.then(codes => {
-					const tipos: ReparacionTipoDetail[] = codes.map(code => getReparacionDetail(code));
+				getReparacionTipos()
+				.then(tipos => {
 					dispatch({ type: actions.FETCH_DONE, tipos, reparaciones });
 				})
 				.catch(() => dispatch({ type: actions.FETCH_DONE, tipos: [], reparaciones }));
@@ -108,7 +107,7 @@ const DropdownReparaciones: FC<DropdownReparacionesProps> = ({ loading, orden, r
 					<Dropdown.ItemText>Cargando Reparaciones...</Dropdown.ItemText>
 				):(
 					state.filtered.map(tipo => (
-						<Dropdown.Item as="button" key={tipo.code} eventKey={tipo.code}>{tipo.label}</Dropdown.Item>
+						<Dropdown.Item as="button" key={tipo.id} eventKey={tipo.id}>{tipo.nombre}</Dropdown.Item>
 					))
 				)}
 			</Dropdown.Menu>
