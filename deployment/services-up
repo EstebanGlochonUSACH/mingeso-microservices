@@ -1,0 +1,28 @@
+#!/bin/bash
+
+minikube kubectl -- apply -f postgres-config-map.yaml
+minikube kubectl -- apply -f postgres-secrets.yaml
+
+minikube kubectl -- apply -f config-server-deployment-service.yaml
+sleep 3
+minikube kubectl -- apply -f eureka-server-deployment-service.yaml
+sleep 2
+
+minikube kubectl -- apply -f autos-db-deployment-service.yaml
+minikube kubectl -- apply -f reparaciones-db-deployment-service.yaml
+minikube kubectl -- apply -f ordenes-db-deployment-service.yaml
+sleep 5
+
+minikube kubectl -- apply -f autofix-autos-deployment-service.yaml
+sleep 2
+minikube kubectl -- apply -f autofix-reparaciones-deployment-service.yaml
+sleep 2
+minikube kubectl -- apply -f autofix-ordenes-deployment-service.yaml
+sleep 2
+minikube kubectl -- apply -f autofix-reportes-deployment-service.yaml
+sleep 2
+
+minikube kubectl -- apply -f gateway-server-deployment-service.yaml
+sleep 2
+
+minikube kubectl -- apply -f autofix-frontend-deployment-service.yaml

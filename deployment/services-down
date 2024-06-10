@@ -1,0 +1,15 @@
+#!/bin/bash
+
+minikube kubectl -- delete -f autofix-frontend-deployment-service.yaml
+minikube kubectl -- delete -f gateway-server-deployment-service.yaml
+minikube kubectl -- delete -f autofix-reportes-deployment-service.yaml
+minikube kubectl -- delete -f autofix-ordenes-deployment-service.yaml
+minikube kubectl -- delete -f autofix-reparaciones-deployment-service.yaml
+minikube kubectl -- delete -f autofix-autos-deployment-service.yaml
+minikube kubectl -- delete -f ordenes-db-deployment-service.yaml
+minikube kubectl -- delete -f reparaciones-db-deployment-service.yaml
+minikube kubectl -- delete -f autos-db-deployment-service.yaml
+minikube kubectl -- delete -f eureka-server-deployment-service.yaml
+minikube kubectl -- delete -f config-server-deployment-service.yaml
+minikube kubectl -- delete -f postgres-secrets.yaml
+minikube kubectl -- delete -f postgres-config-map.yaml
