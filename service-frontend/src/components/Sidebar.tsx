@@ -6,6 +6,7 @@ import { faCarSide } from '@fortawesome/free-solid-svg-icons/faCarSide';
 import { faFileLines } from '@fortawesome/free-solid-svg-icons/faFileLines';
 import { faCopyright } from '@fortawesome/free-solid-svg-icons/faCopyright';
 import { faChartLine } from '@fortawesome/free-solid-svg-icons/faChartLine';
+import { faList } from '@fortawesome/free-solid-svg-icons/faList';
 import { faTag } from '@fortawesome/free-solid-svg-icons/faTag';
 import Nav from 'react-bootstrap/Nav';
 
@@ -32,6 +33,9 @@ const Sidebar: FC = () => {
 					</Nav.Link>
 					<Nav.Link eventKey="/marcas" href="/marcas">
 						<div className="nav-icon"><FontAwesomeIcon icon={faCopyright} /></div> Marcas
+					</Nav.Link>
+					<Nav.Link eventKey="/reparaciones" href="/reparaciones">
+						<div className="nav-icon"><FontAwesomeIcon icon={faList} /></div> Reparaciones
 					</Nav.Link>
 				</Nav>
 			</div>

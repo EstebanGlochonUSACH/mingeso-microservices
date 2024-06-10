@@ -4,7 +4,7 @@ import moment from "moment";
 import { type Params, useParams } from "react-router-dom";
 import type { ReducerAction } from "../../types/Reducer";
 import { getOrden, updateOrden, type Orden } from "../../services/Ordenes/Ordenes";
-import { type Reparacion, createReparacion, deleteReparacion } from "../../services/Reparaciones/Reparaciones";
+import { type Reparacion, /*createReparacion, deleteReparacion*/ } from "../../services/Reparaciones/Reparaciones";
 import type { Bono } from "../../services/Bonos/Bonos";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faWarning } from '@fortawesome/free-solid-svg-icons/faWarning';
@@ -218,38 +218,38 @@ const ShowOrden: FC = () => {
 	const handleSelectReparacion = useCallback((tipo: string) => {
 		if(state.orden){
 			dispatch({ type: actions.UPDATING });
-			createReparacion(tipo, state.orden)
-			.then(orden => {
-				dispatch({ type: actions.UPDATE_SUCCESS, orden });
-			})
-			.catch((err: AxiosError) => {
-				if(err.response?.data){
-					const message = (err.response?.data as any).message;
-					dispatch({ type: actions.UPDATE_FAILED, error: message });
-				}
-				else{
-					dispatch({ type: actions.UPDATE_FAILED, error: 'Ocurrió un error. No se pudo editar la orden.' });
-				}
-			});
+			// createReparacion(tipo, state.orden)
+			// .then(orden => {
+			// 	dispatch({ type: actions.UPDATE_SUCCESS, orden });
+			// })
+			// .catch((err: AxiosError) => {
+			// 	if(err.response?.data){
+			// 		const message = (err.response?.data as any).message;
+			// 		dispatch({ type: actions.UPDATE_FAILED, error: message });
+			// 	}
+			// 	else{
+			// 		dispatch({ type: actions.UPDATE_FAILED, error: 'Ocurrió un error. No se pudo editar la orden.' });
+			// 	}
+			// });
 		}
 	}, [state.orden]);
 
 	const handleDeleteReparacion = useCallback((reparacion: Reparacion) => {
 		if(state.orden){
 			dispatch({ type: actions.UPDATING });
-			deleteReparacion(reparacion)
-			.then(orden => {
-				dispatch({ type: actions.UPDATE_SUCCESS, orden });
-			})
-			.catch((err: AxiosError) => {
-				if(err.response?.data){
-					const message = (err.response?.data as any).message;
-					dispatch({ type: actions.UPDATE_FAILED, error: message });
-				}
-				else{
-					dispatch({ type: actions.UPDATE_FAILED, error: 'Ocurrió un error. No se pudo editar la orden.' });
-				}
-			});
+			// deleteReparacion(reparacion)
+			// .then(orden => {
+			// 	dispatch({ type: actions.UPDATE_SUCCESS, orden });
+			// })
+			// .catch((err: AxiosError) => {
+			// 	if(err.response?.data){
+			// 		const message = (err.response?.data as any).message;
+			// 		dispatch({ type: actions.UPDATE_FAILED, error: message });
+			// 	}
+			// 	else{
+			// 		dispatch({ type: actions.UPDATE_FAILED, error: 'Ocurrió un error. No se pudo editar la orden.' });
+			// 	}
+			// });
 		}
 	}, [state.orden]);
 
