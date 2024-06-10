@@ -1,5 +1,6 @@
 package mingeso.proyecto.autofix_ordenes.services;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import mingeso.proyecto.autofix_ordenes.clients.AutosFeignClient;
 import mingeso.proyecto.autofix_ordenes.clients.ReparacionesFeignClient;
@@ -42,9 +43,9 @@ public class ReparacionService
 
 	private Orden actualizarOrden(Long ordenId) throws Exception {
 		Orden orden = ordenService.getOrdenById(ordenId);
-		if(orden == null) return orden;
+		if(orden == null) return null;
 		Long montoReparaciones = 0L;
-		Integer totalReparaciones = 0;
+		int totalReparaciones = 0;
 		for(Reparacion rep : orden.getReparaciones()){
 			totalReparaciones += 1;
 			montoReparaciones += rep.getMonto();
@@ -76,24 +77,17 @@ public class ReparacionService
 
 		Integer monto = 0;
 		String tipoMotor = auto.getMotor();
-		if(tipoMotor.equals("GASOLINA")){
-			monto = repTipo.getMontoGasolina();
-		}
-		else if(tipoMotor.equals("DIESEL")){
-			monto = repTipo.getMontoDiesel();
-		}
-		else if(tipoMotor.equals("HIBRIDO")){
-			monto = repTipo.getMontoHibrido();
-		}
-		else if(tipoMotor.equals("ELECTRICO")){
-			monto = repTipo.getMontoElectrico();
-		}
-		else{
-			throw new Exception("El tipo motor \"" +  tipoMotor + "\" no tiene monto asociado!");
-		}
+		monto = switch (tipoMotor) {
+			case "GASOLINA" -> repTipo.getMontoGasolina();
+			case "DIESEL" -> repTipo.getMontoDiesel();
+			case "HIBRIDO" -> repTipo.getMontoHibrido();
+			case "ELECTRICO" -> repTipo.getMontoElectrico();
+			default -> throw new Exception("El tipo motor \"" + tipoMotor + "\" no tiene monto asociado!");
+		};
 
 		reparacion.setMonto(monto);
-		reparacion = reparacionRepository.save(reparacion);
+		reparacion.setFechaRegistro(LocalDateTime.now());
+		reparacionRepository.save(reparacion);
 
 		return actualizarOrden(orden.getId());
 	}

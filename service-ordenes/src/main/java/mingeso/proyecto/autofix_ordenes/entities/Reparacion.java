@@ -1,13 +1,9 @@
 package mingeso.proyecto.autofix_ordenes.entities;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
+import jakarta.persistence.*;
+
+import java.time.LocalDateTime;
 
 @Entity
 public class Reparacion
@@ -24,6 +20,9 @@ public class Reparacion
 	private Long id_tipo;
 
 	private Integer monto;
+
+	@Column(name = "fecha_registro", nullable = true)
+	private LocalDateTime fechaRegistro;
 
 	public Reparacion() {}
 
@@ -63,5 +62,13 @@ public class Reparacion
 
 	public void setMonto(Integer monto){
 		this.monto = monto;
+	}
+
+	public LocalDateTime getFechaRegistro(){
+		return fechaRegistro;
+	}
+
+	public void setFechaRegistro(LocalDateTime fechaRegistro){
+		this.fechaRegistro = fechaRegistro;
 	}
 }

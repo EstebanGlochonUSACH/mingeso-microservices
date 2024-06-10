@@ -7,8 +7,10 @@ import mingeso.proyecto.autofix_ordenes.clients.MarcasFeignClient;
 import mingeso.proyecto.autofix_ordenes.dtos.BonoDTO;
 import mingeso.proyecto.autofix_ordenes.dtos.BonoGroupedByFechaInicioDTO;
 import mingeso.proyecto.autofix_ordenes.dtos.MarcaDTO;
-import mingeso.proyecto.autofix_ordenes.entities.Bono;
+import mingeso.proyecto.autofix_ordenes.entities.Orden;
+import mingeso.proyecto.autofix_ordenes.entities.Reparacion;
 import mingeso.proyecto.autofix_ordenes.services.BonoService;
+import mingeso.proyecto.autofix_ordenes.services.ReparacionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
@@ -21,14 +23,17 @@ import org.springframework.web.bind.annotation.*;
 public class BonoController
 {
 	private final BonoService bonoService;
+	private final ReparacionService reparacionService;
 	private final MarcasFeignClient marcasClient;
 
 	@Autowired
 	public BonoController(
 		BonoService bonoService,
+		ReparacionService reparacionService,
 		MarcasFeignClient marcasClient
 	) {
 		this.bonoService = bonoService;
+		this.reparacionService = reparacionService;
 		this.marcasClient = marcasClient;
 	}
 
@@ -82,5 +87,41 @@ public class BonoController
 		} else {
 			return ResponseEntity.notFound().build();
 		}
+	}
+
+	@GetMapping("/{id_orden}/reparaciones/{id_reparacion}")
+	public ResponseEntity<Reparacion> getReparacionById(
+		@PathVariable Long id_orden,
+		@PathVariable Long id_reparacion
+	) {
+		Reparacion reparacion = reparacionService.getReparacionById(id_reparacion);
+		if (reparacion != null) {
+			return ResponseEntity.ok(reparacion);
+		} else {
+			return ResponseEntity.notFound().build();
+		}
+	}
+
+	@PostMapping("/{id_orden}/reparaciones")
+	@Transactional
+	public ResponseEntity<Orden> createReparacion(
+		@PathVariable Long id_orden,
+		@RequestBody Reparacion reparacion
+	) throws Exception {
+		Orden orden = reparacionService.createReparacion(reparacion);
+		if(!orden.getId().equals(id_orden)) {
+			throw new Exception("El \"Orden.id\" no coincide!");
+		}
+		return ResponseEntity.status(HttpStatus.CREATED).body(orden);
+	}
+
+	@DeleteMapping("/{id_orden}/reparaciones/{id_reparacion}\"")
+	@Transactional
+	public ResponseEntity<Orden> deleteReparacion(
+		@PathVariable Long id_orden,
+		@PathVariable Long id_reparacion
+	) throws Exception {
+		Orden orden = reparacionService.deleteReparacion(id_reparacion);
+		return ResponseEntity.ok(orden);
 	}
 }
