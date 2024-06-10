@@ -3,12 +3,12 @@ package mingeso.proyecto.autofix_ordenes.clients;
 import mingeso.proyecto.autofix_ordenes.dtos.MarcaDTO;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
 
 @FeignClient(
-        value = "autofix-autos",
-        path = "/marcas"
+    name = "autofix-marcas",
+    url = "autofix-autos",
+    path = "/marcas"
 )
 public interface MarcasFeignClient {
     @GetMapping

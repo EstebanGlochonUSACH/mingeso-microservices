@@ -5,8 +5,9 @@ import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.*;
 
 @FeignClient(
-        value = "autofix-autos",
-        path = "/autos"
+    name = "autofix-autos",
+    url = "autofix-autos",
+    path = "/autos"
 )
 public interface AutosFeignClient {
     @GetMapping("/{id}")

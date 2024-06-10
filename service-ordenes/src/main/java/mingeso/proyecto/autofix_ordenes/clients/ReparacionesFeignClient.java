@@ -7,8 +7,8 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @FeignClient(
-        value = "autofix-reparaciones",
-        path = "/reparaciones"
+    name = "autofix-reparaciones",
+    path = "/reparaciones"
 )
 public interface ReparacionesFeignClient {
     @GetMapping
