@@ -4,6 +4,7 @@ import type { Orden } from "../services/Ordenes/Ordenes";
 import { numberWithCommas } from "../utils/utils";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faScrewdriverWrench } from '@fortawesome/free-solid-svg-icons/faScrewdriverWrench';
+import { faCalendar } from '@fortawesome/free-solid-svg-icons/faCalendar';
 import Table from 'react-bootstrap/Table';
 import Button from "react-bootstrap/Button";
 
@@ -28,6 +29,9 @@ const ReparacionRow: FC<ReparacionRowProps> = ({ tipos, reparacion, deletable = 
 							<div>
 								<span className="me-2"><FontAwesomeIcon icon={faScrewdriverWrench} /></span> {detail?.nombre || 'UNDEFINED'}
 							</div>
+							<div className="fs-small opacity-50">
+								<span className="me-2"><FontAwesomeIcon icon={faCalendar} /></span> {reparacion.fechaRegistro}
+							</div>
 							<div className="fs-small opacity-50">{detail?.descripcion || '-'}</div>
 						</div>
 						<div>
@@ -38,6 +42,9 @@ const ReparacionRow: FC<ReparacionRowProps> = ({ tipos, reparacion, deletable = 
 					<>
 						<div>
 							<span className="me-2"><FontAwesomeIcon icon={faScrewdriverWrench} /></span> {detail?.nombre || 'UNDEFINED'}
+						</div>
+						<div className="fs-small opacity-50">
+							<span className="me-2"><FontAwesomeIcon icon={faCalendar} /></span> {reparacion.fechaRegistro}
 						</div>
 						<div className="fs-small opacity-50">{detail?.descripcion || '-'}</div>
 					</>

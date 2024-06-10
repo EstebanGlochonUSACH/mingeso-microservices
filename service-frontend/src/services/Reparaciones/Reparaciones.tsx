@@ -20,6 +20,7 @@ export interface Reparacion {
 	tipo: number,
 	monto: number,
 	orden?: Orden,
+	fechaRegistro: string,
 };
 
 export const createReparacionTipo = async (reparacion: Omit<ReparacionTipo, 'id'>) => {

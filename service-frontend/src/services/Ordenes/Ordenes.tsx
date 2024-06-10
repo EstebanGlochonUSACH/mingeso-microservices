@@ -94,3 +94,18 @@ export const createOrden = async (auto: Auto) => {
 			return resObj;
 		});
 };
+
+export const addOrdenReparacion = async (orden: Orden, id_tipo: number) => {
+	return axios.post(`/api/ordenes/${orden.id}/reparaciones`, { id_tipo, orden })
+		.then(res => {
+			return(res.data as Orden);
+		});
+};
+
+export const removeOrdenReparacion = async (orden: Orden, reparacion: Reparacion) => {
+	return axios.delete(`/api/ordenes/${orden.id}/reparaciones/${reparacion.id}`)
+		.then(res => {
+			return(res.data as Orden);
+		});
+};
+

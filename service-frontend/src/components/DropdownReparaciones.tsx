@@ -66,10 +66,11 @@ interface DropdownReparacionesProps {
 	loading: boolean,
 	orden: Orden,
 	reparaciones: Reparacion[],
-	onSelect: (code: string) => void,
+	disabled?: boolean,
+	onSelect: (id: number) => void,
 };
 
-const DropdownReparaciones: FC<DropdownReparacionesProps> = ({ loading, orden, reparaciones, onSelect }) => {
+const DropdownReparaciones: FC<DropdownReparacionesProps> = ({ loading, orden, reparaciones, disabled = false, onSelect }) => {
 	const [state, dispatch] = useReducer(reducerHandler, DEFAULT_STATE);
 
 	useEffect(() => {
@@ -90,7 +91,7 @@ const DropdownReparaciones: FC<DropdownReparacionesProps> = ({ loading, orden, r
 
 	const handleSelect = (eventKey: string|null) => {
 		if(eventKey){
-			onSelect(eventKey);
+			onSelect(parseInt(eventKey));
 		}
 	};
 
@@ -98,7 +99,7 @@ const DropdownReparaciones: FC<DropdownReparacionesProps> = ({ loading, orden, r
 		<Dropdown drop="start" onSelect={handleSelect}>
 			<Dropdown.Toggle
 				id="add-reparacion"
-				disabled={state.loading || loading || state.filtered.length == 0}
+				disabled={state.loading || loading || disabled || state.filtered.length == 0}
 			>
 				Agregar Reparación
 			</Dropdown.Toggle>

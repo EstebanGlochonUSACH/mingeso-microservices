@@ -3,8 +3,8 @@ import type { AxiosError } from "axios";
 import moment from "moment";
 import { type Params, useParams } from "react-router-dom";
 import type { ReducerAction } from "../../types/Reducer";
-import { getOrden, updateOrden, type Orden } from "../../services/Ordenes/Ordenes";
-import { type Reparacion, /*createReparacion, deleteReparacion*/ } from "../../services/Reparaciones/Reparaciones";
+import { addOrdenReparacion, getOrden, removeOrdenReparacion, updateOrden, type Orden } from "../../services/Ordenes/Ordenes";
+import type { Reparacion } from "../../services/Reparaciones/Reparaciones";
 import type { Bono } from "../../services/Bonos/Bonos";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faWarning } from '@fortawesome/free-solid-svg-icons/faWarning';
@@ -75,6 +75,16 @@ const reducerHandler = (state: ReducerState, action: ReducerAction): ReducerStat
 		return { ...state, updateLoading: true, updateIsError: false, updateMessage: '' };
 	}
 	else if(action.type === actions.UPDATE_SUCCESS){
+		if(!!action.signal){
+			return {
+				...state,
+				updateLoading: false,
+				updateIsError: false,
+				updateMessage: 'La orden se editó correctamente',
+				orden: action.orden,
+				signal: action.signal,
+			};
+		}
 		return {
 			...state,
 			updateLoading: false,
@@ -215,41 +225,41 @@ const ShowOrden: FC = () => {
 		}
 	};
 
-	const handleSelectReparacion = useCallback((tipo: string) => {
+	const handleSelectReparacion = useCallback((tipoId: number) => {
 		if(state.orden){
 			dispatch({ type: actions.UPDATING });
-			// createReparacion(tipo, state.orden)
-			// .then(orden => {
-			// 	dispatch({ type: actions.UPDATE_SUCCESS, orden });
-			// })
-			// .catch((err: AxiosError) => {
-			// 	if(err.response?.data){
-			// 		const message = (err.response?.data as any).message;
-			// 		dispatch({ type: actions.UPDATE_FAILED, error: message });
-			// 	}
-			// 	else{
-			// 		dispatch({ type: actions.UPDATE_FAILED, error: 'Ocurrió un error. No se pudo editar la orden.' });
-			// 	}
-			// });
+			addOrdenReparacion(state.orden, tipoId)
+			.then(orden => {
+				dispatch({ type: actions.UPDATE_SUCCESS, orden, signal: Symbol() });
+			})
+			.catch((err: AxiosError) => {
+				if(err.response?.data){
+					const message = (err.response?.data as any).message;
+					dispatch({ type: actions.UPDATE_FAILED, error: message });
+				}
+				else{
+					dispatch({ type: actions.UPDATE_FAILED, error: 'Ocurrió un error. No se pudo editar la orden.' });
+				}
+			});
 		}
 	}, [state.orden]);
 
 	const handleDeleteReparacion = useCallback((reparacion: Reparacion) => {
 		if(state.orden){
 			dispatch({ type: actions.UPDATING });
-			// deleteReparacion(reparacion)
-			// .then(orden => {
-			// 	dispatch({ type: actions.UPDATE_SUCCESS, orden });
-			// })
-			// .catch((err: AxiosError) => {
-			// 	if(err.response?.data){
-			// 		const message = (err.response?.data as any).message;
-			// 		dispatch({ type: actions.UPDATE_FAILED, error: message });
-			// 	}
-			// 	else{
-			// 		dispatch({ type: actions.UPDATE_FAILED, error: 'Ocurrió un error. No se pudo editar la orden.' });
-			// 	}
-			// });
+			removeOrdenReparacion(state.orden, reparacion)
+			.then(orden => {
+				dispatch({ type: actions.UPDATE_SUCCESS, orden, signal: Symbol() });
+			})
+			.catch((err: AxiosError) => {
+				if(err.response?.data){
+					const message = (err.response?.data as any).message;
+					dispatch({ type: actions.UPDATE_FAILED, error: message });
+				}
+				else{
+					dispatch({ type: actions.UPDATE_FAILED, error: 'Ocurrió un error. No se pudo editar la orden.' });
+				}
+			});
 		}
 	}, [state.orden]);
 
@@ -301,7 +311,7 @@ const ShowOrden: FC = () => {
 										type="datetime-local"
 										value={state.orden.fechaIngreso || undefined}
 										onChange={handleChangeFechaIngreso}
-										disabled={state.updateLoading || state.orden.reparaciones.length === 0}
+										disabled={state.updateLoading}
 									/>
 								</InputGroup>
 							</Col>
@@ -351,7 +361,7 @@ const ShowOrden: FC = () => {
 					</Card.Body>
 				):(
 					<Card.Body>
-						{(!state.orden.fechaIngreso) && (
+						{(state.orden.fechaIngreso != null && state.orden.fechaSalida == null) && (
 							<div className="d-flex justify-content-end">
 								<DropdownReparaciones
 									loading={state.loading || state.updateLoading}
@@ -364,7 +374,7 @@ const ShowOrden: FC = () => {
 						<TablaReparaciones
 							orden={state.orden}
 							reparaciones={state.orden.reparaciones}
-							deletable={!state.orden.fechaIngreso}
+							deletable={state.orden.fechaIngreso != null && state.orden.fechaSalida == null}
 							onDelete={handleDeleteReparacion}
 						/>
 					</Card.Body>
