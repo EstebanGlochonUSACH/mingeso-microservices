@@ -21,5 +21,6 @@ public interface OrdenRepository extends JpaRepository<Orden, Long>
 	@Query("SELECT o FROM Orden o ORDER BY o.fechaIngreso ASC")
 	List<Orden> findAllSorted();
 
-	Page<Orden> findById_auto(Long id_auto, Pageable pageable);
+	@Query("SELECT o FROM Orden o WHERE o.id_auto = :id_auto ORDER BY o.fechaIngreso ASC")
+	List<Orden> findAllById_auto(Long id_auto);
 }

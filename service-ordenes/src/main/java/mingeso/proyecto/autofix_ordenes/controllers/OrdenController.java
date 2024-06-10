@@ -37,14 +37,13 @@ public class OrdenController
 		@RequestParam(required = false) Long auto
 	) {
 		Pageable pageable = PageRequest.of(page, limit);
-		if(auto != null){
-			Page<Orden> ordenes = ordenService.getPagedOrdenes(pageable, auto);
-			return ResponseEntity.ok(ordenes);
-		}
-		else{
-			Page<Orden> ordenes = ordenService.getPagedOrdenes(pageable, null);
-			return ResponseEntity.ok(ordenes);
-		}
+		Page<Orden> ordenes = ordenService.getPagedOrdenes(pageable);
+		return ResponseEntity.ok(ordenes);
+
+		// if(auto != null){
+		// 	Page<Orden> ordenes = ordenService.getOrdenesByAuto(auto);
+		// 	return ResponseEntity.ok(ordenes);
+		// }
 	}
 
 	@GetMapping("/all")
@@ -53,7 +52,7 @@ public class OrdenController
 		List<OrdenDTO> ordenes2 = new ArrayList<>();
 
 		for(Orden orden : ordenes){
-			AutoDTO auto = autosClient.getAutoById(orden.getAuto());
+			AutoDTO auto = autosClient.getAutoById(orden.getId_auto());
 			if(auto == null) continue;
 			OrdenDTO dto = new OrdenDTO();
 			dto.setId(orden.getId());

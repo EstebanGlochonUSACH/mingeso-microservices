@@ -60,7 +60,7 @@ public class ReparacionService
 			throw new Exception("La reparacion no tiene \"orden\".");
 		}
 
-		Long id_auto = orden.getAuto();
+		Long id_auto = orden.getId_auto();
 		if(id_auto == null) {
 			throw new Exception("La orden no tiene auto!");
 		}

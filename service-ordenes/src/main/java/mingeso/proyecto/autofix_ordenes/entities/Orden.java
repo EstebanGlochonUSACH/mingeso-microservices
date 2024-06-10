@@ -21,6 +21,7 @@ public class Orden
 	@GeneratedValue(strategy=GenerationType.AUTO)
 	private Long id_orden;
 
+	@Column(name = "id_auto", nullable = false)
 	private Long id_auto;
 
 	@OneToOne(fetch = FetchType.EAGER)
@@ -66,21 +67,6 @@ public class Orden
 
 	public Orden() {}
 
-	public Orden(Long id_auto){
-		this.id_auto = id_auto;
-		this.fechaIngreso = null;
-		this.fechaSalida = null;
-		this.fechaEntrega = null;
-		this.montoReparaciones = null;
-		this.descuentoDiaAtencion = null;
-		this.descuentoReparaciones = null;
-		this.recargaAntiguedad = null;
-		this.recargaKilometraje = null;
-		this.recargaAtraso = null;
-		this.valorIva = null;
-		this.montoTotal = null;
-	}
-
 	public Long getId(){
 		return id_orden;
 	}
@@ -97,12 +83,12 @@ public class Orden
 		this.montoReparaciones = montoReparaciones;
 	}
 
-	public Long getAuto() {
+	public Long getId_auto() {
 		return id_auto;
 	}
 
-	public void setAuto(Long auto) {
-		this.id_auto = auto;
+	public void setId_auto(Long id_auto) {
+		this.id_auto = id_auto;
 	}
 
 	public Bono getBono() {

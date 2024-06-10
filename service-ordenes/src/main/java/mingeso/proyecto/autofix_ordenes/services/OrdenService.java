@@ -42,11 +42,12 @@ public class OrdenService
 		this.autosClient = autosClient;
 	}
 
-	public Page<Orden> getPagedOrdenes(Pageable pageable, Long id_auto) {
-		if(id_auto != null){
-			return ordenRepository.findById_auto(id_auto, pageable);
-		}
+	public Page<Orden> getPagedOrdenes(Pageable pageable) {
 		return ordenRepository.findAllSorted(pageable);
+	}
+
+	public List<Orden> getOrdenesByAuto(Long id_auto) {
+		return ordenRepository.findAllById_auto(id_auto);
 	}
 
 	public List<Orden> getAllOrdenes() {
@@ -68,7 +69,7 @@ public class OrdenService
 	}
 
 	private AutoDTO getAuto(Orden orden) throws Exception {
-		Long id_auto = orden.getAuto();
+		Long id_auto = orden.getId_auto();
 		if(id_auto == null){
 			throw new Exception("La orden no tiene auto!");
 		}
