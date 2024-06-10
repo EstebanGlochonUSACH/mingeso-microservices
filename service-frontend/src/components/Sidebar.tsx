@@ -34,8 +34,8 @@ const Sidebar: FC = () => {
 					<Nav.Link eventKey="/marcas" href="/marcas">
 						<div className="nav-icon"><FontAwesomeIcon icon={faCopyright} /></div> Marcas
 					</Nav.Link>
-					<Nav.Link eventKey="/reparaciones" href="/reparaciones">
-						<div className="nav-icon"><FontAwesomeIcon icon={faList} /></div> Reparaciones
+					<Nav.Link eventKey="/reparaciones-tipo" href="/reparaciones-tipo">
+						<div className="nav-icon"><FontAwesomeIcon icon={faList} /></div> Reparaciones Tipo
 					</Nav.Link>
 				</Nav>
 			</div>

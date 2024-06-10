@@ -8,7 +8,7 @@ export interface ReparacionTipo {
 	montoDiesel: number,
 	montoHibrido: number,
 	montoElectrico: number,
-	descripcion?: string,
+	descripcion: string|null,
 };
 
 export const getReparacionTipos = async () => {
@@ -23,7 +23,11 @@ export interface Reparacion {
 };
 
 export const createReparacionTipo = async (reparacion: Omit<ReparacionTipo, 'id'>) => {
-	return axios.post('/api/reparaciones', reparacion).then(res => (res.data as ReparacionTipo));
+	return axios.post('/api/reparaciones/create', reparacion).then(res => (res.data as ReparacionTipo));
+};
+
+export const updateReparacionTipo = async (reparacion: ReparacionTipo) => {
+	return axios.put('/api/reparaciones/' + reparacion.id, reparacion).then(res => (res.data as ReparacionTipo));
 };
 
 export const deleteReparacionTipo = async (reparacion: ReparacionTipo) => {

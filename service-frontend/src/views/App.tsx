@@ -8,7 +8,7 @@ import ListMarcas from "./Marcas/List";
 import ListOrdenes from "./Ordenes/List";
 import ShowOrden from "./Ordenes/Show";
 import ListBonos from "./Bonos/List";
-import RouterReportes from "./Reportes/Router";
+// import RouterReportes from "./Reportes/Router";
 import ListReparaciones from "./Reparaciones/List";
 
 const App: FC = () => {
@@ -28,9 +28,9 @@ const App: FC = () => {
 							<Route path="/ordenes" element={<ListOrdenes />} />
 							<Route path="/orden/:id" element={<ShowOrden />} />
 							<Route path="/marcas" element={<ListMarcas />} />
-							<Route path="/reparaciones" element={<ListReparaciones />} />
+							<Route path="/reparaciones-tipo" element={<ListReparaciones />} />
 							<Route path="/bonos" element={<ListBonos />} />
-							<Route path="/reportes/*" element={<RouterReportes />} />
+							{/* <Route path="/reportes/*" element={<RouterReportes />} /> */}
 						</Routes>
 					</main>
 				</div>
