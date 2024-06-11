@@ -1,116 +1,129 @@
-// import { useState, type FC, useEffect } from "react";
-// import type { AxiosError } from "axios";
-// import { getReporteReparacionMotor } from "../../services/Reportes/Reportes";
-// import { type ReparacionTipoDetail, getAllReparacionTipo, getReparacionDetail } from "../../services/Reparaciones/Reparaciones";
-// import type { AutoMotor } from "../../services/Autos/Autos";
-// import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-// import { faWarning } from '@fortawesome/free-solid-svg-icons/faWarning';
-// import Card from "react-bootstrap/Card";
-// import Table from "react-bootstrap/Table";
-// import Row from 'react-bootstrap/Row';
-// import Col from 'react-bootstrap/Col';
-// import { numberWithCommas } from "../../utils/utils";
+import { useState, type FC, useEffect } from "react";
+import type { AxiosError } from "axios";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faWarning } from '@fortawesome/free-solid-svg-icons/faWarning';
+import Card from "react-bootstrap/Card";
+import Table from "react-bootstrap/Table";
+import { numberWithCommas } from "../../utils/utils";
+import { type Orden, getOrdenesAll } from "../../services/Ordenes/Ordenes";
 
-// type ReporteAutoMotor = { tipo: AutoMotor, countVehiculos: number, montoTotal: number };
+const sumaMontos = (...args: Array<number|null|undefined>) => {
+	let total = 0;
+	for(const arg of args){
+		if(typeof(arg) == 'number' && arg > 0) total = total + arg;
+	}
+	return total;
+}
 
-// type ReporteReparacionTipo = { detail: ReparacionTipoDetail, autos: ReporteAutoMotor[] };
+const getDate = (isoDate: string|null) => {
+	if(!isoDate) return '-';
+	const date = new Date(isoDate);
+	const year = date.getFullYear();
+	let month = ('00' + (date.getMonth() + 1));
+	month = month.substring(month.length - 2, month.length);
+	let day = ('00' + date.getDay());
+	day = day.substring(day.length - 2, day.length);
+	return `${year}-${month}-${day}`;
+};
 
-// interface State {
-// 	loading: boolean,
-// 	error: string|null,
-// 	reportes: ReporteReparacionTipo[],
-// };
+const getTime = (isoDate: string|null) => {
+	if(!isoDate) return '-';
+	const date = new Date(isoDate);
+	const hours = date.getHours();
+	let minutes = ('00' + date.getMinutes());
+	minutes = minutes.substring(minutes.length - 2, minutes.length);
+	return `${hours}:${minutes}`;
+};
 
-// const reparacionesTipo = getAllReparacionTipo();
+interface State {
+	loading: boolean,
+	error: string|null,
+	ordenes: Orden[],
+};
 
-// const ViewReporte3: FC = () => {
-// 	const [state, setState] = useState<State>({
-// 		loading: true,
-// 		error: null,
-// 		reportes: [],
-// 	});
+const ViewReporte3: FC = () => {
+	const [state, setState] = useState<State>({
+		loading: true,
+		error: null,
+		ordenes: [],
+	});
 
-// 	useEffect(() => {
-// 		setState(state => ({ ...state, loading: true }));
-// 		getReporteReparacionMotor()
-// 		.then(reportes => {
-// 			if(reportes && reportes.length > 0){
-// 				const reportesTipo: any = {};
-// 				for(const reporte of reportes){
-// 					if(!(reporte.tipoReparacion in reportesTipo)){
-// 						const tipoDetail = getReparacionDetail(reporte.tipoReparacion);
-// 						const tipoObj: ReporteReparacionTipo = { detail: tipoDetail, autos: [] };
-// 						reportesTipo[reporte.tipoReparacion] = tipoObj;
-// 					}
+	useEffect(() => {
+		setState(state => ({ ...state, loading: true }));
+		getOrdenesAll()
+		.then(ordenes => {
+			setState(state => ({ ...state, loading: false, error: null, ordenes }));
+		})
+		.catch((err: AxiosError) => setState(state => ({ ...state, loading: false, ordenes: [], error: err.message })));
+	}, []);
 
-// 					const tipoObj: ReporteReparacionTipo = reportesTipo[reporte.tipoReparacion];
-// 					if(!(reporte.tipoMotor in tipoObj)){
-// 						tipoObj.autos.push({
-// 							tipo: reporte.tipoMotor,
-// 							countVehiculos: reporte.countVehiculos,
-// 							montoTotal: reporte.montoTotal,
-// 						});
-// 					}
-// 				}
+	return (
+		<Card>
+			<Card.Header>
+				<b>Reporte</b>: Autos con "todas" las reparaciones
+			</Card.Header>
+			{state.loading ? (
+				<Card.Body className="text-center fst-italic p-4">Cargando Ordenes...</Card.Body>
+			):((state.error ? (
+				<Card.Body className="text-center fst-italic p-5">
+					<FontAwesomeIcon icon={faWarning} /> {state.error}
+				</Card.Body>
+			):((state.ordenes.length === 0) ? (
+				<Card.Body className="text-center fst-italic p-4">No hay datos</Card.Body>
+			):(
+				<Card.Body>
+					<Table responsive>
+						<thead>
+							<tr>
+								<th>Patente Vehículo</th>
+								<th>Marca Vehículo</th>
+								<th>Modelo Vehículo</th>
+								<th>Tipo Vehículo</th>
+								<th>Año Fabricación</th>
+								<th>Tipo Motor</th>
+								<th>Fecha Ingreso Taller</th>
+								<th>Hora Ingreso Taller</th>
+								<th>Monto Total Reparaciones</th>
+								<th>Monto Recargos</th>
+								<th>Monto Descuentos</th>
+								<th>SUB Total</th>
+								<th>Monto IVA</th>
+								<th>Costo Total</th>
+								<th>Fecha Salida Taller</th>
+								<th>Hora Salida Taller</th>
+								<th>Fecha Retiro Cliente</th>
+								<th>Hora Retiro Cliente</th>
+							</tr>
+						</thead>
+						<tbody>
+							{state.ordenes.map(orden => (
+								<tr key={orden.id}>
+									<td>{orden.auto.patente}</td>
+									<td>{orden.auto.marca.nombre}</td>
+									<td>{orden.auto.modelo}</td>
+									<td>{orden.auto.tipo}</td>
+									<td>{orden.auto.anio}</td>
+									<td>{orden.auto.motor}</td>
+									<td>{getDate(orden.fechaIngreso)}</td>
+									<td>{getTime(orden.fechaIngreso)}</td>
+									<td>{numberWithCommas(sumaMontos(orden.montoReparaciones))}</td>
+									<td>{numberWithCommas(sumaMontos(orden.recargaAntiguedad, orden.recargaAtraso, orden.recargaKilometraje))}</td>
+									<td>{numberWithCommas(sumaMontos(orden.descuentoDiaAtencion, orden.descuentoReparaciones, orden.bono?.monto))}</td>
+									<td>{numberWithCommas(sumaMontos(orden.montoTotal))}</td>
+									<td>{numberWithCommas(sumaMontos(orden.valorIva))}</td>
+									<td>{numberWithCommas(sumaMontos(orden.montoTotal, orden.valorIva))}</td>
+									<td>{getDate(orden.fechaSalida)}</td>
+									<td>{getTime(orden.fechaSalida)}</td>
+									<td>{getDate(orden.fechaEntrega)}</td>
+									<td>{getTime(orden.fechaEntrega)}</td>
+								</tr>
+							))}
+						</tbody>
+					</Table>
+				</Card.Body>
+			))))}
+		</Card>
+	);
+};
 
-// 				const reposteList: ReporteReparacionTipo[] = [];
-// 				for(const tipo of reparacionesTipo){
-// 					reposteList.push(reportesTipo[tipo]);
-// 				}
-
-// 				setState(state => ({ ...state, loading: false, error: null, reportes: reposteList }));
-// 			}
-// 			else{
-// 				setState(state => ({ ...state, loading: false, error: null, reportes: [] }));
-// 			}
-// 		})
-// 		.catch((err: AxiosError) => setState(state => ({ ...state, loading: false, reportes: [], error: err.message })));
-// 	}, []);
-
-// 	return (
-// 		<Card>
-// 			<Card.Header>
-// 				<b>Reporte</b>: Tipos de Reparaciones vs el número de vehículos según Tipo de Motor
-// 			</Card.Header>
-// 			{state.loading ? (
-// 				<Card.Body className="text-center fst-italic p-4">Cargando Reportes...</Card.Body>
-// 			):((state.error ? (
-// 				<Card.Body className="text-center fst-italic p-5">
-// 					<FontAwesomeIcon icon={faWarning} /> {state.error}
-// 				</Card.Body>
-// 			):((state.reportes.length === 0) ? (
-// 				<Card.Body className="text-center fst-italic p-4">No hay datos</Card.Body>
-// 			):(
-// 				<Card.Body>
-// 					<Row>
-// 						{state.reportes.map(reporte => (
-// 							<Col lg="6" key={reporte.detail.code}>
-// 								<h6>{reporte.detail.label}</h6>
-// 								<Table>
-// 									<thead>
-// 										<tr>
-// 											<th>Tipo de Motor</th>
-// 											<th>Cantidad</th>
-// 											<th>Monto Total</th>
-// 										</tr>
-// 									</thead>
-// 									<tbody>
-// 										{reporte.autos.map(auto => (
-// 											<tr key={auto.tipo}>
-// 												<td>{auto.tipo}</td>
-// 												<td>{auto.countVehiculos}</td>
-// 												<td>{numberWithCommas(auto.montoTotal)}</td>
-// 											</tr>
-// 										))}
-// 									</tbody>
-// 								</Table>
-// 							</Col>
-// 						))}
-// 					</Row>
-// 				</Card.Body>
-// 			))))}
-// 		</Card>
-// 	);
-// };
-
-// export default ViewReporte3;
+export default ViewReporte3;

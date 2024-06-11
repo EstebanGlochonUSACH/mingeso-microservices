@@ -8,7 +8,7 @@ import java.time.LocalDate;
 @Getter
 @Setter
 public class ReparacionMesTipoSummary {
-    private ReparacionDTO tipo;
+    private ReparacionTipoDTO tipo;
 
     private LocalDate mes0;
     private Long totalMes0;
@@ -27,7 +27,7 @@ public class ReparacionMesTipoSummary {
     private Long totalMonto;
 
     public ReparacionMesTipoSummary(
-        ReparacionDTO tipo,
+        ReparacionTipoDTO tipo,
         LocalDate mes0,
         LocalDate mes1,
         LocalDate mes2,

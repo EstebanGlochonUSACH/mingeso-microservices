@@ -31,7 +31,7 @@ public class ReporteService
 		List<OrdenDTO> ordenes = ordenesClient.getAllOrdenes();
 		Map<Long, ReparacionTipoSummary> map = new HashMap<>();
 		ReparacionTipoSummary aux;
-
+		ReparacionTipoDTO repTipoAux;
 		for(OrdenDTO orden : ordenes){
 			if(orden.getFechaIngreso().getYear() != year || orden.getFechaIngreso().getMonthValue() != month){
 				continue;
@@ -41,25 +41,18 @@ public class ReporteService
 			String autoTipo = auto.getTipo();
 
 			for(ReparacionDTO reparacion : orden.getReparaciones()){
-				Long id = reparacion.getId();
-				if(!map.containsKey(id)){
-					map.put(id, new ReparacionTipoSummary(reparacion));
+				Long tipo = reparacion.getTipo();
+				if(!map.containsKey(tipo)){
+					repTipoAux = reparacionesClient.getReparacion(tipo);
+					map.put(tipo, new ReparacionTipoSummary(repTipoAux));
 				}
-				aux = map.get(id);
-				if(autoTipo.equals("SEDAN")){
-					aux.addSedan(reparacion.getMonto());
-				}
-				else if(autoTipo.equals("HATCHBACK")){
-					aux.addHatchback(reparacion.getMonto());
-				}
-				else if(autoTipo.equals("SUV")){
-					aux.addSuv(reparacion.getMonto());
-				}
-				else if(autoTipo.equals("PICKUP")){
-					aux.addPickup(reparacion.getMonto());
-				}
-				else if(autoTipo.equals("FURGONETA")){
-					aux.addFurgoneta(reparacion.getMonto());
+				aux = map.get(tipo);
+				switch (autoTipo) {
+					case "SEDAN" -> aux.addSedan(reparacion.getMonto());
+					case "HATCHBACK" -> aux.addHatchback(reparacion.getMonto());
+					case "SUV" -> aux.addSuv(reparacion.getMonto());
+					case "PICKUP" -> aux.addPickup(reparacion.getMonto());
+					case "FURGONETA" -> aux.addFurgoneta(reparacion.getMonto());
 				}
 			}
 		}
@@ -68,20 +61,7 @@ public class ReporteService
 		for(ReparacionTipoDTO repTipo : repTipos){
 			Long id = repTipo.getId();
 			if(!map.containsKey(id)){
-				ReparacionDTO reparacion = new ReparacionDTO();
-				reparacion.setId(id);
-				reparacion.setNombre(repTipo.getNombre());
-				reparacion.setMonto(0L);
-				reparacion.setDescripcion(repTipo.getDescripcion());
-				map.put(id, new ReparacionTipoSummary(reparacion));
-			}
-			else{
-				aux = map.get(id);
-				ReparacionDTO reparacion = aux.getTipo();
-				reparacion.setId(id);
-				reparacion.setNombre(repTipo.getNombre());
-				reparacion.setMonto(0L);
-				reparacion.setDescripcion(repTipo.getDescripcion());
+				map.put(id, new ReparacionTipoSummary(repTipo));
 			}
 		}
 
@@ -103,13 +83,15 @@ public class ReporteService
 		LocalDate mes2 = mes0.minusMonths(2);
 		LocalDate mes3 = mes0.minusMonths(3);
 
+		ReparacionTipoDTO repTipoAux;
 		for(OrdenDTO orden : ordenes){
 			for(ReparacionDTO reparacion : orden.getReparaciones()){
-				Long id = reparacion.getId();
-				if(!map.containsKey(id)){
-					map.put(id, new ReparacionMesTipoSummary(reparacion, mes0, mes1, mes2, mes3));
+				Long tipo = reparacion.getTipo();
+				if(!map.containsKey(tipo)){
+					repTipoAux = reparacionesClient.getReparacion(tipo);
+					map.put(tipo, new ReparacionMesTipoSummary(repTipoAux, mes0, mes1, mes2, mes3));
 				}
-				aux = map.get(id);
+				aux = map.get(tipo);
 				if(inMonth(orden.getFechaIngreso(), mes0)){
 					aux.addMes0(reparacion.getMonto());
 				}
@@ -129,20 +111,7 @@ public class ReporteService
 		for(ReparacionTipoDTO repTipo : repTipos){
 			Long id = repTipo.getId();
 			if(!map.containsKey(id)){
-				ReparacionDTO reparacion = new ReparacionDTO();
-				reparacion.setId(id);
-				reparacion.setNombre(repTipo.getNombre());
-				reparacion.setMonto(0L);
-				reparacion.setDescripcion(repTipo.getDescripcion());
-				map.put(id, new ReparacionMesTipoSummary(reparacion, mes0, mes1, mes2, mes3));
-			}
-			else{
-				aux = map.get(id);
-				ReparacionDTO reparacion = aux.getTipo();
-				reparacion.setId(id);
-				reparacion.setNombre(repTipo.getNombre());
-				reparacion.setMonto(0L);
-				reparacion.setDescripcion(repTipo.getDescripcion());
+				map.put(id, new ReparacionMesTipoSummary(repTipo, mes0, mes1, mes2, mes3));
 			}
 		}
 

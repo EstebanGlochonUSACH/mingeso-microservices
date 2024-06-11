@@ -70,6 +70,11 @@ export const getOrdenes = async (page: number, auto?: Auto) => {
 		.then(res => parseOrdenesResponse(res.data as Pagination<Orden>));
 };
 
+export const getOrdenesAll = async () => {
+	return axios.get('/api/ordenes/all')
+		.then(res => (res.data as Orden[]));
+};
+
 export const getOrdenesWithPatente = async (page: number, patente?: string) => {
 	if(patente){
 		return axios.get('/api/ordenes', { params: { page, patente } }).then(res => parseOrdenesResponse(res.data as Pagination<Orden>));

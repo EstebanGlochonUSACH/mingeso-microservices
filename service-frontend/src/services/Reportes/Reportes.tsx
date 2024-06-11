@@ -1,35 +1,55 @@
 import axios from "axios";
-import type { AutoMotor, AutoTipo } from "../Autos/Autos";
 
-export interface ReporteTipo {
-	tipoReparacion: string,
-	tipoAuto: AutoTipo,
-	countVehiculos: number,
-	montoTotal: number,
+export interface ReparacionTipoSummary {
+    tipo: {
+        id: number,
+        nombre: string,
+        monto: number,
+        descripcion: string,
+    },
+	totalSedan: number,
+	totalMontoSedan: number,
+	totalHatchback: number,
+	totalMontoHatchback: number,
+	totalSuv: number,
+	totalMontoSuv: number,
+	totalPickup: number,
+	totalMontoPickup: number,
+	totalFurgoneta: number,
+	totalMontoFurgoneta: number,
+	totalAutos: number,
+	totalMonto: number,
 };
 
-export const getReporteReparacionTipo = async () => {
-	return axios.get('/api/reportes/tipo-auto').then(res => (res.data as ReporteTipo[]));
+export const getReporteReparacionTipoAuto = async (year: number, month: number) => {
+	return axios.get('/api/reportes/tipo-auto', { params: { year, month } })
+		.then(res => (res.data as ReparacionTipoSummary[]));
 };
 
-export interface ReporteTipoMotor {
-	tipoReparacion: string,
-	tipoMotor: AutoMotor,
-	countVehiculos: number,
-	montoTotal: number,
+export interface ReparacionMesTipoSummary {
+    tipo: {
+        id: number,
+        nombre: string,
+        monto: number,
+        descripcion: string,
+    },
+    mes0: string,
+    totalMes0: number,
+    totalMontoMes0: number,
+    mes1: string,
+    totalMes1: number,
+    totalMontoMes1: number,
+    mes2: string,
+    totalMes2: number,
+    totalMontoMes2: number,
+    mes3: string,
+    totalMes3: number,
+    totalMontoMes3: number,
+    totalReparaciones: number,
+    totalMonto: number,
 };
 
-export const getReporteReparacionMotor = async () => {
-	return axios.get('/api/reportes/tipo-motor').then(res => (res.data as ReporteTipoMotor[]));
+export const getReporteReparacionTipoMes = async (year: number, month: number) => {
+	return axios.get('/api/reportes/tipo-mes', { params: { year, month } })
+		.then(res => (res.data as ReparacionMesTipoSummary[]));
 };
-
-export interface ReporteTiempoMarca {
-	marca: string,
-	avgRepairTime: number,
-	avgRepairTimeText: string,
-};
-
-export const getReporteTiempoReparacion = async () => {
-	return axios.get('/api/reportes/tiempo-reparacion').then(res => (res.data as ReporteTiempoMarca[]));
-};
-

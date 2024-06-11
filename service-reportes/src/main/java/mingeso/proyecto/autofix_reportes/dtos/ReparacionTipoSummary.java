@@ -7,7 +7,7 @@ import lombok.Setter;
 @Setter
 public class ReparacionTipoSummary
 {
-	private ReparacionDTO tipo;
+	private ReparacionTipoDTO tipo;
 
 	private Long totalSedan;
 	private Long totalMontoSedan;
@@ -23,7 +23,7 @@ public class ReparacionTipoSummary
 	private Long totalAutos;
 	private Long totalMonto;
 
-	public ReparacionTipoSummary(ReparacionDTO tipo) {
+	public ReparacionTipoSummary(ReparacionTipoDTO tipo) {
 		this.tipo = tipo;
 		this.totalSedan = 0L;
 		this.totalMontoSedan = 0L;

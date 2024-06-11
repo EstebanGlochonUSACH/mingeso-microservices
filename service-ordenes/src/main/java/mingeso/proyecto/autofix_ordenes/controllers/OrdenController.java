@@ -39,22 +39,6 @@ public class OrdenController
 		this.autosClient = autosClient;
 	}
 
-	@GetMapping
-	public ResponseEntity<Page<Orden>> getPagedOrdenes(
-		@RequestParam(defaultValue = "0") int page,
-		@RequestParam(defaultValue = "100") int limit,
-		@RequestParam(required = false) Long auto
-	) {
-		Pageable pageable = PageRequest.of(page, limit);
-		Page<Orden> ordenes = ordenService.getPagedOrdenes(pageable);
-		return ResponseEntity.ok(ordenes);
-
-		// if(auto != null){
-		// 	Page<Orden> ordenes = ordenService.getOrdenesByAuto(auto);
-		// 	return ResponseEntity.ok(ordenes);
-		// }
-	}
-
 	private OrdenDTO convertOrdenToDTO(Orden orden) throws Exception {
 		AutoDTO auto = autosClient.getAutoById(orden.getId_auto());
 		if(auto == null){
@@ -77,6 +61,26 @@ public class OrdenController
 		dto.setFechaSalida(orden.getFechaSalida());
 		dto.setFechaEntrega(orden.getFechaEntrega());
 		return dto;
+	}
+
+	@GetMapping
+	public ResponseEntity<Page<OrdenDTO>> getPagedOrdenes(
+		@RequestParam(defaultValue = "0") int page,
+		@RequestParam(defaultValue = "100") int limit,
+		@RequestParam(required = false) Long auto
+	) {
+		Pageable pageable = PageRequest.of(page, limit);
+		Page<Orden> ordenes = ordenService.getPagedOrdenes(pageable);
+		Page<OrdenDTO> ordenesDTO = ordenes.map(orden -> {
+			try { return convertOrdenToDTO(orden); }
+			catch (Exception err){ return null; }
+		});
+		return ResponseEntity.ok(ordenesDTO);
+
+		// if(auto != null){
+		// 	Page<Orden> ordenes = ordenService.getOrdenesByAuto(auto);
+		// 	return ResponseEntity.ok(ordenes);
+		// }
 	}
 
 	@GetMapping("/all")
