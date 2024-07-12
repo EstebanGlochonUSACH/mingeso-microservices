@@ -14,41 +14,41 @@ export default defineConfig({
 		port: 3000,
 		strictPort: true,
 		proxy: {
-			// '/api': {
-			//	target: BACKEND_URI,
-			//	changeOrigin: true,
-			//	rewrite: (path) => path.replace(/^\/api\//, '/'),
+			'/api': {
+				target: BACKEND_URI,
+				changeOrigin: true,
+				// rewrite: (path) => path.replace(/^\/api\//, '/'),
+			},
+			// '/api/autos': {
+			// 	target: SERVICES_AUTOS_URI,
+			// 	changeOrigin: true,
+			// 	rewrite: (path) => path.replace(/^\/api\//, '/'),
 			// },
-			'/api/autos': {
-				target: SERVICES_AUTOS_URI,
-				changeOrigin: true,
-				rewrite: (path) => path.replace(/^\/api\//, '/'),
-			},
-			'/api/marcas': {
-				target: SERVICES_AUTOS_URI,
-				changeOrigin: true,
-				rewrite: (path) => path.replace(/^\/api\//, '/'),
-			},
-			'/api/reparaciones': {
-				target: SERVICES_REPARACIONES_URI,
-				changeOrigin: true,
-				rewrite: (path) => path.replace(/^\/api\//, '/'),
-			},
-			'/api/ordenes': {
-				target: SERVICES_ORDENES_URI,
-				changeOrigin: true,
-				rewrite: (path) => path.replace(/^\/api\//, '/'),
-			},
-			'/api/bonos': {
-				target: SERVICES_ORDENES_URI,
-				changeOrigin: true,
-				rewrite: (path) => path.replace(/^\/api\//, '/'),
-			},
-			'/api/reportes': {
-				target: SERVICES_REPORTES_URI,
-				changeOrigin: true,
-				rewrite: (path) => path.replace(/^\/api\//, '/'),
-			},
+			// '/api/marcas': {
+			// 	target: SERVICES_AUTOS_URI,
+			// 	changeOrigin: true,
+			// 	rewrite: (path) => path.replace(/^\/api\//, '/'),
+			// },
+			// '/api/reparaciones': {
+			// 	target: SERVICES_REPARACIONES_URI,
+			// 	changeOrigin: true,
+			// 	rewrite: (path) => path.replace(/^\/api\//, '/'),
+			// },
+			// '/api/ordenes': {
+			// 	target: SERVICES_ORDENES_URI,
+			// 	changeOrigin: true,
+			// 	rewrite: (path) => path.replace(/^\/api\//, '/'),
+			// },
+			// '/api/bonos': {
+			// 	target: SERVICES_ORDENES_URI,
+			// 	changeOrigin: true,
+			// 	rewrite: (path) => path.replace(/^\/api\//, '/'),
+			// },
+			// '/api/reportes': {
+			// 	target: SERVICES_REPORTES_URI,
+			// 	changeOrigin: true,
+			// 	rewrite: (path) => path.replace(/^\/api\//, '/'),
+			// },
 		}
 	},
 	plugins: [react()],
