@@ -4,6 +4,10 @@ logging:
   level:
     root: INFO
     org.springframework.cloud.gateway: DEBUG
+    org.springframework.web: DEBUG
+    reactor.netty: DEBUG
+    org.springframework.http: DEBUG
+    org.springframework.core.codec: DEBUG
 eureka:
   client:
     fetch-registry: true
@@ -30,34 +34,37 @@ spring:
           predicates:
             - Path=/api/autos/**
           filters:
-            - RewritePath=/api/(?<segment>.*), /${segment}
+            - RewritePath=/api/autos/(?<segment>.*), /autos/${segment}
         - id: autofix-marcas
           uri: lb://AUTOFIX-AUTOS
           predicates:
             - Path=/api/marcas/**
           filters:
-            - RewritePath=/api/(?<segment>.*), /${segment}
+            - RewritePath=/api/marcas/(?<segment>.*), /marcas/${segment}
+
         - id: autofix-reparaciones
           uri: lb://AUTOFIX-REPARACIONES
           predicates:
             - Path=/api/reparaciones/**
           filters:
-            - RewritePath=/api/(?<segment>.*), /${segment}
+            - RewritePath=/api/reparaciones/(?<segment>.*), /reparaciones/${segment}
+
         - id: autofix-ordenes
           uri: lb://AUTOFIX-ORDENES
           predicates:
             - Path=/api/ordenes/**
           filters:
-            - RewritePath=/api/(?<segment>.*), /${segment}
+            - RewritePath=/api/ordenes/(?<segment>.*), /ordenes/${segment}
         - id: autofix-bonos
           uri: lb://AUTOFIX-ORDENES
           predicates:
             - Path=/api/bonos/**
           filters:
-            - RewritePath=/api/(?<segment>.*), /${segment}
+            - RewritePath=/api/bonos/(?<segment>.*), /bonos/${segment}
+
         - id: autofix-reportes
           uri: lb://AUTOFIX-REPORTES
           predicates:
             - Path=/api/reportes/**
           filters:
-            - RewritePath=/api/(?<segment>.*), /${segment}
+            - RewritePath=/api/reportes/(?<segment>.*), /reportes/${segment}
