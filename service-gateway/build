@@ -1,0 +1,4 @@
+#!/bin/bash
+
+docker build -t estebanglochon/autofix-service-gateway .
+docker push estebanglochon/autofix-service-gateway

@@ -1,10 +1,10 @@
-package mingeso.proyecto.autofix_gateway;
+package com.mingeso.apigateway;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class AutofixGatewayApplicationTests {
+class ApiGatewayApplicationTests {
 
 	@Test
 	void contextLoads() {
