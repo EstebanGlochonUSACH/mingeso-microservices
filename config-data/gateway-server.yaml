@@ -26,20 +26,38 @@ spring:
             allowedHeaders: "*"
       routes:
         - id: autofix-autos
-          uri: lb://autofix-autos
+          uri: lb://AUTOFIX-AUTOS
           predicates:
-            - Path=/autos/**
-            - Path=/marcas/**
+            - Path=/api/autos/**
+          filters:
+            - RewritePath=/api/(?<segment>.*), /${segment}
+        - id: autofix-marcas
+          uri: lb://AUTOFIX-AUTOS
+          predicates:
+            - Path=/api/marcas/**
+          filters:
+            - RewritePath=/api/(?<segment>.*), /${segment}
         - id: autofix-reparaciones
-          uri: lb://autofix-reparaciones
+          uri: lb://AUTOFIX-REPARACIONES
           predicates:
-            - Path=/reparaciones/**
+            - Path=/api/reparaciones/**
+          filters:
+            - RewritePath=/api/(?<segment>.*), /${segment}
         - id: autofix-ordenes
-          uri: lb://autofix-ordenes
+          uri: lb://AUTOFIX-ORDENES
           predicates:
-            - Path=/bonos/**
-            - Path=/ordenes/**
+            - Path=/api/ordenes/**
+          filters:
+            - RewritePath=/api/(?<segment>.*), /${segment}
+        - id: autofix-bonos
+          uri: lb://AUTOFIX-ORDENES
+          predicates:
+            - Path=/api/bonos/**
+          filters:
+            - RewritePath=/api/(?<segment>.*), /${segment}
         - id: autofix-reportes
-          uri: lb://autofix-reportes
+          uri: lb://AUTOFIX-REPORTES
           predicates:
-            - Path=/reportes/**
+            - Path=/api/reportes/**
+          filters:
+            - RewritePath=/api/(?<segment>.*), /${segment}
