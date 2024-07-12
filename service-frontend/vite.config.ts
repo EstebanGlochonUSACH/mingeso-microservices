@@ -2,10 +2,10 @@ import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 
 const BACKEND_URI = process.env.BACKEND_URI ? process.env.BACKEND_URI : 'http://localhost:8080';
-const SERVICES_AUTOS_URI = process.env.SERVICES_AUTOS_URI ? process.env.SERVICES_AUTOS_URI : 'http://localhost:8090';
-const SERVICES_REPARACIONES_URI = process.env.SERVICES_REPARACIONES_URI ? process.env.SERVICES_REPARACIONES_URI : 'http://localhost:8091';
-const SERVICES_ORDENES_URI = process.env.SERVICES_ORDENES_URI ? process.env.SERVICES_ORDENES_URI : 'http://localhost:8092';
-const SERVICES_REPORTES_URI = process.env.SERVICES_REPORTES_URI ? process.env.SERVICES_REPORTES_URI : 'http://localhost:8093';
+// const SERVICES_AUTOS_URI = process.env.SERVICES_AUTOS_URI ? process.env.SERVICES_AUTOS_URI : 'http://localhost:8090';
+// const SERVICES_REPARACIONES_URI = process.env.SERVICES_REPARACIONES_URI ? process.env.SERVICES_REPARACIONES_URI : 'http://localhost:8091';
+// const SERVICES_ORDENES_URI = process.env.SERVICES_ORDENES_URI ? process.env.SERVICES_ORDENES_URI : 'http://localhost:8092';
+// const SERVICES_REPORTES_URI = process.env.SERVICES_REPORTES_URI ? process.env.SERVICES_REPORTES_URI : 'http://localhost:8093';
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -17,7 +17,7 @@ export default defineConfig({
 			'/api': {
 				target: BACKEND_URI,
 				changeOrigin: true,
-				// rewrite: (path) => path.replace(/^\/api\//, '/'),
+				rewrite: (path) => path.replace(/^\/api\//, '/'),
 			},
 			// '/api/autos': {
 			// 	target: SERVICES_AUTOS_URI,
