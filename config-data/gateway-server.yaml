@@ -32,39 +32,39 @@ spring:
         - id: autofix-autos
           uri: lb://AUTOFIX-AUTOS
           predicates:
-            - Path=/api/autos/**
+            - Path=/autos/**
           filters:
-            - RewritePath=/api/autos/(?<segment>.*), /autos/${segment}
+            - RewritePath=/autos/(?<segment>.*), /autos/${segment}
         - id: autofix-marcas
           uri: lb://AUTOFIX-AUTOS
           predicates:
-            - Path=/api/marcas/**
+            - Path=/marcas/**
           filters:
-            - RewritePath=/api/marcas/(?<segment>.*), /marcas/${segment}
+            - RewritePath=/marcas/(?<segment>.*), /marcas/${segment}
 
         - id: autofix-reparaciones
           uri: lb://AUTOFIX-REPARACIONES
           predicates:
-            - Path=/api/reparaciones/**
+            - Path=/reparaciones/**
           filters:
-            - RewritePath=/api/reparaciones/(?<segment>.*), /reparaciones/${segment}
+            - RewritePath=/reparaciones/(?<segment>.*), /reparaciones/${segment}
 
         - id: autofix-ordenes
           uri: lb://AUTOFIX-ORDENES
           predicates:
-            - Path=/api/ordenes/**
+            - Path=/ordenes/**
           filters:
-            - RewritePath=/api/ordenes/(?<segment>.*), /ordenes/${segment}
+            - RewritePath=/ordenes/(?<segment>.*), /ordenes/${segment}
         - id: autofix-bonos
           uri: lb://AUTOFIX-ORDENES
           predicates:
-            - Path=/api/bonos/**
+            - Path=/bonos/**
           filters:
-            - RewritePath=/api/bonos/(?<segment>.*), /bonos/${segment}
+            - RewritePath=/bonos/(?<segment>.*), /bonos/${segment}
 
         - id: autofix-reportes
           uri: lb://AUTOFIX-REPORTES
           predicates:
-            - Path=/api/reportes/**
+            - Path=/reportes/**
           filters:
-            - RewritePath=/api/reportes/(?<segment>.*), /reportes/${segment}
+            - RewritePath=/reportes/(?<segment>.*), /reportes/${segment}
